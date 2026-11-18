@@ -1,0 +1,104 @@
+[versions]
+# Baseline chosen for consumer compatibility: apps need at least these versions.
+kotlin = "2.3.20"
+compose = "1.10.3"
+# Material 3 is versioned on its own; 1.9.0 is the release built against Compose Multiplatform 1.10.
+composeMaterial3 = "1.9.0"
+agp = "9.5.0"
+mavenPublish = "0.37.0"
+# Build-time code quality tools: they never reach consumers of the library.
+detekt = "2.0.0-alpha.6"
+ktlint = "1.8.0"
+ktlintGradle = "14.2.0"
+# 0.9.7 and older crash on the Android KMP plugin's host tests.
+kover = "0.9.11"
+# Test libraries only, in the library and the sample: they never reach consumers of the library. Both were
+# built with an older Kotlin than this build's and with the coroutines version this build uses.
+kotest = "6.2.7"
+turbine = "1.2.1"
+robolectric = "4.18.1"
+roborazzi = "1.79.0"
+# The Android release that Compose Multiplatform 1.10.3 resolves to on Android.
+androidxCompose = "1.10.5"
+# Sample apps only, from here to the end of the versions: the library uses none of these.
+# 1.1.1 is the release JetBrains pairs with Compose 1.10; from 1.1.2 on it raises the Compose runtime to 1.11.
+navigation3 = "1.1.1"
+# 2.10.0 is the release built for Compose 1.10; 2.11.0 raises the Compose runtime to 1.11.
+lifecycle = "2.10.0"
+# The stable 1.3.0 was compiled with Kotlin 2.4, which this build cannot read on web and iOS; rc01 is the
+# last one built with Kotlin 2.3.20.
+materialAdaptive = "1.3.0-rc01"
+koin = "4.2.2"
+# 1.11.0 is the newest release built with Kotlin 2.3.20; later ones need Kotlin 2.4.
+kotlinxSerialization = "1.11.0"
+kotlinxCoroutines = "1.10.2"
+# 0.3.1 is the release made for Navigation 3 1.1 and Compose 1.10; 1.x needs the Compose 1.11 runtime.
+navigation3Browser = "0.3.1"
+androidCompileSdk = "37"
+androidMinSdk = "23"
+# The sample apps need 24, which Material's adaptive library requires. The library itself stays on 23.
+androidSampleMinSdk = "24"
+
+[libraries]
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
+compose-animation = { module = "org.jetbrains.compose.animation:animation", version.ref = "compose" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "composeMaterial3" }
+# Sample apps only. The icon set stopped at 1.7.3: it is no longer released with new Compose versions.
+compose-material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version = "1.7.3" }
+compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
+compose-ui-test = { module = "org.jetbrains.compose.ui:ui-test", version.ref = "compose" }
+
+# The lock that makes HollerHostState safe to call from any thread. Compose already brings atomicfu to every
+# app: 0.27.0 is the version Compose Multiplatform 1.10 resolves on iOS and web, so this adds no new artifact.
+kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version = "0.27.0" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+# Assertions that read as sentences and say what was wrong when they fail. Used with kotlin.test's runner.
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+# Runs a check against many generated inputs. Used with kotlin.test's runner too.
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+# Reads what a Flow emits, one item at a time. Used by the sample's view model tests.
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+# Runs Android's own code on the computer, so the tests that draw a message can run for Android without an emulator.
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+# Takes a picture of what a test drew on Android and compares it with the picture kept in the repository.
+roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
+# Declares the empty activity that a Compose UI test draws in on Android.
+# Compose's Android test code brings Espresso 3.5.0, which calls an Android method that newer Android releases no
+# longer have (InputManager.getInstance). 3.7.0 is the stable release that works there.
+androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version = "3.7.0" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidxCompose" }
+
+# Sample apps only: navigation, view models, dependency injection and what they need.
+navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
+# Ties the back stack to the browser's Back button, until Navigation 3 does it by itself (CMP-8924).
+navigation3-browser = { module = "com.github.terrakok:navigation3-browser", version.ref = "navigation3Browser" }
+lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycle" }
+lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+material3-adaptive-navigation3 = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation3", version.ref = "materialAdaptive" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+# Gives desktop the main dispatcher that view models run on.
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinxCoroutines" }
+
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }

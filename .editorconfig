@@ -1,0 +1,29 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+indent_size = 4
+ktlint_code_style = android_studio
+max_line_length = 140
+# Composables are PascalCase by convention.
+ktlint_function_naming_ignore_when_annotated_with = Composable
+# A function signature goes one parameter per line once it has four or more parameters. Without this,
+# ktlint insists on a single line whenever the signature fits within max_line_length.
+ktlint_function_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than = 3
+# A class header goes one parameter per line from three parameters. Without this, ktlint insists on a
+# single line whenever the header fits within max_line_length.
+ktlint_class_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than = 3
+# Plain alphabetical imports, which is what ktlint checks. Without this, Android Studio's "Optimize
+# Imports" moves java, javax and kotlin imports to the end and the two tools disagree.
+ij_kotlin_imports_layout = *
+# Trailing commas on multi-line declarations and calls (android_studio forbids them by default).
+# Android Studio reads these too.
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+# Report imports that nothing in the file uses; `./gradlew ktlintFormat` removes them.
+ktlint_standard_no-unused-imports = enabled

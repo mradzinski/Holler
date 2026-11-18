@@ -1,0 +1,108 @@
+@startuml holler-5-internals
+title The internals: the classes behind the public API
+
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "Public" #EEF6F0 {
+    class Holler {
+        lock
+        queue of entries
+    }
+    interface HollerHandle
+    class "HollerHost()" as HollerHost <<composable>>
+    class "HollerMessage()" as HollerMessage <<composable>>
+}
+
+package "Internal: the queue" #FBF3E6 {
+
+    class HollerEntry {
+        id: Long
+        key: Any
+        content: HollerContent
+        stage: Queued, Visible or Leaving
+        visibility: MutableTransitionState<Boolean>
+        markShown()
+        swap(content)
+        dismiss(reason)
+    }
+
+    class HollerContent {
+        value: Any
+        waiters: callers suspended in awaitDismiss()
+    }
+
+    class TextMessage <<data>> {
+        title: String
+        details: String?
+        duration: HollerDuration
+    }
+}
+
+package "Internal: drawing" #FBF3E6 {
+
+    class HostedFrame {
+        entry: HollerEntry
+        context: HollerAnimationContext
+        animation, colors, style: the host's defaults
+        descriptions: accessibility texts
+        drawn: was HollerMessage called?
+        AnimatedCard(animation, style, card)
+    }
+
+    class "HostedValue()" as HostedValue <<composable>> {
+        draws a TextMessage itself,
+        hands any other value to the app,
+        drops a value nobody drew
+    }
+
+    class "HollerCard()" as HollerCard <<composable>> {
+        CardHeader(): icon, title, actions at the top, expand, close
+        CardBody(): details and actions in the middle
+        CardFooter(): countdown, actions and close\n    at the bottom, progress bar
+    }
+
+    class HollerTimer {
+        phase: Counting, Paused, Stopped or Finished
+        progress: Float
+        remaining: State<Duration>
+        stop()
+        pause()
+        resume()
+    }
+
+    class "Pile()" as Pile <<composable>> {
+        the newest card in front,
+        the earlier ones behind it,
+        smaller and without content
+    }
+
+    class SwipeToDismiss {
+        the sideways drag that closes a card
+    }
+
+    class PressOrHover {
+        whether the card is pressed or hovered
+    }
+}
+
+Holler *-- HollerEntry : holds many, in order
+HollerEntry ..|> HollerHandle : is the handle show() returns
+HollerEntry *-- HollerContent : shows one at a time
+HollerContent ..> TextMessage : holds one for show(title, …)
+
+HollerHost ..> HostedFrame : builds one per visible entry
+HollerHost ..> HostedValue : calls for each visible entry
+HollerHost ..> Pile : arranges the cards with,\nwhen stackingStyle is Pile
+HostedValue ..> HollerMessage : calls, directly or through the app's lambda
+HollerMessage ..> HostedFrame : reads, and calls AnimatedCard
+HollerMessage ..> HollerCard : draws
+HostedFrame --> HollerEntry : points at
+
+HollerCard *-- HollerTimer : owns
+HollerCard *-- SwipeToDismiss : owns
+HollerCard *-- PressOrHover : owns
+HollerCard ..> HollerEntry : calls dismiss(reason) on
+
+@enduml

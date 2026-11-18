@@ -1,0 +1,209 @@
+@startuml holler-4-public-api
+title The public API: what an app can call and pass
+
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "Show and close" {
+
+    class Holler {
+        messages: List<HollerHandle>
+        show(value: Any, key: Any? = null): HollerHandle
+        show(title: String, details: String? = null,\n    duration: HollerDuration = Short, key: Any? = null): HollerHandle
+        dismiss(key: Any)
+        dismissAll()
+    }
+
+    interface HollerHandle {
+        key: Any
+        value: Any?
+        dismiss()
+        awaitDismiss(): HollerDismissReason <<suspend>>
+    }
+
+    enum HollerDismissReason {
+        Timeout
+        CloseButton
+        Swipe
+        Action
+        Programmatic
+        Replaced
+    }
+}
+
+package "Draw" {
+
+    class "HollerHost()" as HollerHost <<composable>> {
+        holler: Holler
+        closeContentDescription: String
+        expandContentDescription: String
+        collapseContentDescription: String
+        alignment: Alignment = BottomCenter
+        stackingStyle: HollerStackingStyle = Column
+        maxVisible: Int = 3, or 5 in a pile
+        contentPadding: PaddingValues
+        spacing: Dp
+        colors: HollerColors
+        style: HollerStyle
+        animation: HollerAnimation = Default
+        animateOnPress: Boolean = true
+        expandIcon: (expanded: Boolean) -> Unit
+        closeIcon: () -> Unit
+        message: HollerHostScope.(value: Any) -> Unit
+    }
+
+    class "HollerMessage()" as HollerMessage <<composable>> {
+        title: String or slot
+        details: String? or slot
+        icon: slot
+        actions: HollerActionsScope.() -> Unit
+        countdown: (remaining: Duration) -> Unit
+        actionsPosition: HollerActionsPosition
+        actionsVisibility: HollerActionsVisibility
+        closePosition: HollerClosePosition
+        showProgressBar: Boolean = true
+        stoppableBy: HollerStopTrigger
+        duration: HollerDuration = Short,\n    Infinite when it starts expanded
+        pauseOnPressOrHover: Boolean = true
+        colors: HollerColors?
+        style: HollerStyle?
+        animation: HollerAnimation?
+    }
+
+    interface HollerHostScope <<sealed>>
+
+    interface HollerActionsScope {
+        dismiss()
+    }
+
+    class "HollerIconRing()" as HollerIconRing <<composable>> {
+        tint: Color
+        size: Dp
+        icon: slot
+    }
+}
+
+package "Behavior of one message" {
+
+    abstract class HollerDuration <<sealed>> {
+        Short: 5 s
+        Long: 10 s
+        Infinite
+        Custom(duration: Duration)
+    }
+
+    enum HollerStopTrigger {
+        Expand
+        None
+    }
+
+    enum HollerStackingStyle {
+        Column
+        Pile
+    }
+
+    enum HollerActionsPosition {
+        Top
+        Middle
+        Bottom
+    }
+
+    enum HollerClosePosition {
+        Top
+        Bottom
+        None
+    }
+
+    enum HollerActionsVisibility {
+        AlwaysVisible
+        StartExpanded
+        ChevronHint
+    }
+}
+
+package "Look and motion" {
+
+    class HollerColors <<data>> {
+        container
+        title
+        details
+        controls
+        border
+        shadow
+        footerContainer
+        countdown
+        progress
+        progressTrack
+    }
+
+    class HollerStyle <<data>> {
+        shape
+        maxWidth
+        iconSize
+        titleTextStyle
+        detailsTextStyle
+        countdownTextStyle
+        shadowRadius
+        shadowSpread
+        shadowOffset
+        progressBarHeight
+    }
+
+    class HollerDefaults <<object>> {
+        colors(): HollerColors <<composable>>
+        colors(colorScheme): HollerColors
+        style(…): HollerStyle <<composable>>
+        ExpandIcon(expanded) <<composable>>
+        CloseIcon() <<composable>>
+        maxVisible(stackingStyle): Int
+    }
+
+    abstract class HollerAnimation {
+        messageEnter(context): EnterTransition
+        messageExit(context): ExitTransition
+        messageContentEnter(context): EnterTransition
+        messageContentExit(context): ExitTransition
+        {static} Default
+        {static} Fade
+        {static} Slide
+        {static} Rise
+        {static} Drop
+        {static} Scale
+        {static} Pop
+        {static} None
+    }
+
+    class HollerAnimationContext <<data>> {
+        alignment: Alignment
+        layoutDirection: LayoutDirection
+    }
+}
+
+' Only the arrows that say something the parameter lists do not. Which type each parameter takes is
+' already written in the boxes, so those arrows are left out to keep the picture readable.
+Holler .right.> HollerHandle : show() returns
+HollerHandle .right.> HollerDismissReason : awaitDismiss() returns
+
+HollerHost -up-> Holler : draws the messages of
+HollerHost .right.> HollerHostScope : its message lambda runs in
+HollerMessage .up.> HollerHostScope : only callable in
+HollerMessage .right.> HollerActionsScope : its actions slot runs in
+HollerMessage -[hidden]right-> HollerIconRing
+
+HollerDefaults .up.> HollerColors : builds from the theme
+HollerDefaults .up.> HollerStyle : builds from the theme
+HollerAnimation .right.> HollerAnimationContext : receives
+
+' Invisible links that only place the groups: behavior and look sit under the composables.
+HollerMessage -[hidden]down-> HollerDuration
+HollerDuration -[hidden]right-> HollerStopTrigger
+HollerStopTrigger -[hidden]right-> HollerActionsVisibility
+HollerActionsVisibility -[hidden]right-> HollerActionsPosition
+HollerActionsPosition -[hidden]right-> HollerClosePosition
+HollerClosePosition -[hidden]right-> HollerStackingStyle
+HollerActionsScope -[hidden]down-> HollerColors
+HollerColors -[hidden]right-> HollerStyle
+HollerStyle -[hidden]right-> HollerAnimation
+
+@enduml

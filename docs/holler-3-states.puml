@@ -1,0 +1,38 @@
+@startuml holler-3-states
+title The two state machines inside a message
+
+skinparam shadowing false
+
+state "The message in the queue (HollerEntry.Stage)" as stages {
+    [*] --> Queued : show()
+    Queued : shown by your code, not drawn yet
+    Queued --> Visible : the host draws it\n(a free place among maxVisible)
+    Visible : on screen, enter animation played
+    Visible --> Visible : replaced by a show()\nwith the same key
+    Visible --> Leaving : dismissed for any reason
+    Leaving : exit animation playing,\nits key is free again
+    Queued --> [*] : dismissed or left undrawn\n(removed at once)
+    Leaving --> [*] : exit animation ended
+}
+
+state "Its countdown (HollerTimer.Phase)" as phases {
+    [*] --> Counting : the card appears
+    Counting : time is passing
+    Counting --> Paused : dragged, pressed or hovered
+    Paused : held for a moment
+    Paused --> Counting : let go
+    Counting --> Stopped : expanded by the user\n(as stoppableBy allows)
+    Stopped : stays until closed;\nbar and countdown are gone
+    Counting --> Finished : the full time has passed
+    Finished : reports Timeout,\nwhich makes the message leave
+    Finished --> [*]
+    Stopped --> [*] : the message is closed
+}
+
+note bottom of phases
+    An Infinite message has no countdown at all.
+    A queued message has no timer yet:
+    it starts when the message becomes visible.
+end note
+
+@enduml

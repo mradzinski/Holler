@@ -1,0 +1,51 @@
+# Overrides on top of detekt's default rules (buildUponDefaultConfig). Keep each one justified.
+
+config:
+  validation: true
+
+# detekt's defaults skip test code in these rules by folder, but don't know AGP's `androidHostTest` or the
+# library's own `uiTest`, `pixelTest` and `mouseTest` (the tests that draw a message). Each rule below repeats its default list
+# plus those folders (the anchor keeps one copy).
+complexity:
+  LongMethod:
+    # A composable may reach ~80 lines before it must be split.
+    allowedLines: 80
+  TooManyFunctions:
+    excludes: &tests ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidHostTest/**', '**/uiTest/**', '**/mouseTest/**', '**/pixelTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**']
+
+exceptions:
+  InstanceOfCheckForException:
+    excludes: *tests
+  ThrowingExceptionsWithoutMessageOrCause:
+    excludes: *tests
+  TooGenericExceptionCaught:
+    excludes: *tests
+
+naming:
+  FunctionNaming:
+    # Composables are PascalCase by convention.
+    ignoreAnnotated: ['Composable']
+    excludes: *tests
+  MatchingDeclarationName:
+    # The default list of platform suffixes a file name may carry (`UiTest.jvm.kt`), plus `wasmJs`, which it lacks.
+    multiplatformTargets: ['ios', 'android', 'js', 'jvm', 'native', 'iosArm64', 'iosX64', 'macosX64', 'mingwX64', 'linuxX64', 'wasmJs']
+
+performance:
+  ForEachOnRange:
+    excludes: *tests
+  SpreadOperator:
+    excludes: *tests
+
+potential-bugs:
+  UnsafeCallOnNullableType:
+    excludes: *tests
+
+style:
+  MagicNumber:
+    excludes: *tests
+  MaxLineLength:
+    # Same limit as ktlint (.editorconfig).
+    maxLineLength: 140
+  ReturnCount:
+    # Early `?: return null` / `if (…) return` guards are idiomatic and keep the main path flat.
+    excludeGuardClauses: true

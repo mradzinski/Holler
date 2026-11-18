@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Name of the sample app: the title of the desktop window. -->
+    <string name="app_name">Holler Sample</string>
+
+    <!-- Used on several screens. -->
+    <string name="action_back">Back</string>
+
+    <!-- What a screen reader announces for a message's own buttons. Holler has no text: the app supplies it. -->
+    <string name="holler_close">Close</string>
+    <string name="holler_expand">Show more</string>
+    <string name="holler_collapse">Show less</string>
+
+    <!-- The inbox screen. -->
+    <string name="inbox_title">Inbox</string>
+    <string name="inbox_refresh">Check for new emails</string>
+    <string name="inbox_settings">Settings</string>
+    <string name="inbox_empty">No emails</string>
+    <!-- What a screen reader announces for the dot next to an email that has not been opened. -->
+    <string name="inbox_unread">Unread</string>
+    <!-- Shown next to the inbox in a wide window, while no email is open. -->
+    <string name="inbox_no_selection">Select an email to read it</string>
+
+    <string name="email_delete">Delete</string>
+    <string name="email_reply_hint">Write a reply</string>
+    <string name="email_send">Send</string>
+
+    <!-- The settings screen. -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_dark_theme">Dark theme</string>
+    <string name="settings_dark_theme_description">Follows the system until you change it here.</string>
+    <string name="settings_brand_look">Custom look for messages</string>
+    <string name="settings_brand_look_description">Messages use the app's brand colors, typeface and shape, not the Material theme.</string>
+    <string name="settings_messages_at_top">Messages at the top</string>
+    <string name="settings_messages_at_top_description">Messages show at the top of the screen, not at the bottom.</string>
+    <string name="settings_messages_as_pile">Messages as a pile</string>
+    <string name="settings_messages_as_pile_description">The newest message shows in front of the earlier ones, not next to them.</string>
+    <string name="settings_simulate_offline">Simulate offline</string>
+    <string name="settings_simulate_offline_description">The app behaves as if the device had no network.</string>
+    <string name="settings_playground">Playground</string>
+    <string name="settings_playground_description">Try every kind of message Holler can show.</string>
+
+    <!-- The strip under the top bar while the app is offline. -->
+    <string name="offline_strip">Offline</string>
+
+    <!-- The messages the app shows while it is used. -->
+    <string name="message_email_deleted">Email deleted</string>
+    <string name="message_undo">Undo</string>
+    <string name="message_refresh_failed_title">Couldn't check for new emails</string>
+    <string name="message_refresh_failed_details">The mail server could not be reached. Check your connection and try again. The emails you already have are still here.</string>
+    <string name="message_retry">Retry</string>
+    <string name="message_offline_title">You're offline</string>
+    <string name="message_reply_sending">Sending reply…</string>
+    <string name="message_reply_sent">Reply sent</string>
+    <string name="message_reply_failed_title">Reply not sent</string>
+    <string name="message_reply_failed_details">The mail server could not be reached, so your reply was not sent. Check your connection and send it again.</string>
+
+    <!-- The playground screen: its title and its buttons. Every button but the last shows one kind of message. -->
+    <string name="playground_title">Playground</string>
+    <string name="demo_everything">Everything at once</string>
+    <string name="demo_title_only">Short, title only</string>
+    <string name="demo_text_only">Text only, no look</string>
+    <string name="demo_actions_visible">Actions always visible</string>
+    <string name="demo_starts_expanded">Starts expanded</string>
+    <string name="demo_infinite">Infinite, must act</string>
+    <string name="demo_no_progress_bar">No progress bar, fade</string>
+    <string name="demo_replace">Replace a message</string>
+    <string name="demo_action_top">Action at the top</string>
+    <string name="demo_actions_bottom">Actions at the bottom</string>
+    <string name="demo_close_bottom">Close at the bottom</string>
+    <string name="demo_no_close">No close button</string>
+    <string name="demo_custom_look">Custom colors and style</string>
+    <string name="demo_dismiss_all">Dismiss all</string>
+
+    <!-- The playground's messages: titles, long messages and action buttons. -->
+    <string name="link_copied_title">Link copied</string>
+    <string name="text_only_title">Settings saved</string>
+    <string name="text_only_details">Your preferences were updated on this device.</string>
+    <string name="conversation_archived_title">Conversation archived</string>
+    <string name="invitation_title">Invitation received</string>
+    <string name="invitation_message">Ana invited you to the Design team workspace. You can accept it now or find it later in your inbox.</string>
+    <string name="invitation_accept">Accept</string>
+    <string name="invitation_decline">Decline</string>
+    <string name="backup_finished_title">Backup finished</string>
+    <string name="backup_finished_message">All 412 files were copied to your cloud storage.</string>
+    <string name="swipe_away_title">Swipe me away</string>
+    <string name="focus_mode_title">Focus mode is on</string>
+    <string name="focus_mode_message">Notifications are silenced until 8:00 AM. Emails from your favorite senders still come through.</string>
+    <string name="focus_mode_turn_off">Turn off</string>
+    <string name="connection_lost_title">Connection lost</string>
+    <string name="connection_lost_message">We could not reach the server. Check your network and try again.</string>
+    <string name="connection_lost_retry">Retry</string>
+    <string name="connection_lost_ignore">Ignore</string>
+    <string name="update_available_title">Update available</string>
+    <string name="update_available_message">Version 2.4 is ready to install. It takes about a minute.</string>
+    <string name="update_available_install">Install</string>
+    <string name="storage_full_title">Storage almost full</string>
+    <string name="storage_full_free_up">Free up space</string>
+    <string name="draft_saved_title">Draft saved</string>
+    <string name="upload_started_title">Uploading photo…</string>
+    <string name="upload_finished_title">Photo uploaded</string>
+    <string name="changes_saved_title">Changes saved</string>
+    <!-- A long message, to show how a message wraps over several lines. -->
+    <string name="changes_saved_message">Are you sure you would like to remove this user? If the user is an active member of your team, their account will be deleted. This action cannot be undone.</string>
+    <string name="changes_saved_okay">Okay</string>
+
+    <!-- The countdown of a message. %1$d is the number of seconds left, which the app shows in bold. -->
+    <plurals name="countdown">
+        <item quantity="one">This message will close in %1$d second.</item>
+        <item quantity="other">This message will close in %1$d seconds.</item>
+    </plurals>
+</resources>

@@ -1,0 +1,61 @@
+@startuml holler-2-message-lifecycle
+title The life of one message, from show() to gone
+
+skinparam shadowing false
+hide footbox
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+autonumber
+
+actor "Your code" as caller
+participant "Holler" as holler
+participant "HollerEntry" as entry
+participant "HollerHost" as host
+participant "message lambda\n(your app)" as lambda
+participant "HollerMessage" as message
+participant "HollerCard\n+ HollerTimer" as card
+
+== Show ==
+
+caller -> holler : show(value, key)
+holler -> entry : create, stage = Queued
+holler --> caller : HollerHandle
+note right of caller
+    The call returns at once.
+    Nothing is drawn yet.
+end note
+
+== Draw (when the message is among the first maxVisible) ==
+
+host -> holler : read the queue
+host -> entry : markShown(), stage = Visible
+host -> lambda : message(value)
+note over host, lambda
+    A text message skips the lambda:
+    the host calls HollerMessage itself.
+end note
+lambda -> message : HollerMessage(title, …, animation)
+message -> card : draw inside the enter animation
+card -> card : start the timer
+
+== Close (time is up, close button, swipe, an action, or dismiss from code) ==
+
+card -> entry : dismiss(reason), stage = Leaving
+entry --> caller : awaitDismiss() returns the reason
+message -> card : play the exit animation
+host -> holler : remove the entry once the exit has ended
+note over holler, host
+    The next queued message, if any,
+    now becomes visible and its timer starts.
+end note
+
+== Replace (show with a key that is still alive) ==
+
+caller -> holler : show(newValue, sameKey)
+holler -> entry : swap(content), same entry and place
+entry --> caller : earlier awaitDismiss() returns Replaced
+host -> lambda : message(newValue)
+lambda -> message : HollerMessage(…)
+message -> card : new card, timer starts over,\nno exit or enter animation
+
+@enduml

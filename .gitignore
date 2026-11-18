@@ -1,0 +1,15 @@
+.gradle/
+build/
+.kotlin/
+local.properties
+.idea/
+*.iml
+.DS_Store
+sample/iosApp/build/
+xcuserdata/
+
+# Claude Code files: local tooling, never committed
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json

@@ -1,0 +1,46 @@
+@startuml holler-1-overview
+title Holler in one picture: who does what when a message is shown
+
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam componentStyle rectangle
+skinparam rectangle {
+    RoundCorner 12
+}
+
+rectangle "Your app" as app #F4F1FA {
+    component "Code that shows messages\n(view model, click handler)" as caller
+    component "Your message types\n(for example a sealed AppMessage)" as types
+    component "The host's message lambda\n(gives each value its look)" as lambda
+}
+
+rectangle "Holler: public API" as api #EEF6F0 {
+    component "**Holler**\nthe queue of messages" as holler
+    component "**HollerHost**\ndraws the first maxVisible messages" as host
+    component "**HollerMessage**\none card and its options" as message
+    component "**HollerHandle**\nclose a message, or wait for it to close" as handle
+}
+
+rectangle "Holler: internals" as internals #FBF3E6 {
+    component "**HollerEntry**\none message: its place, key and stage" as entry
+    component "**HostedFrame**\nwhat the host prepared for one message" as frame
+    component "**AnimatedCard**\nenter and exit animation" as animated
+    component "**HollerCard**\nlayout, buttons, swipe" as card
+    component "**HollerTimer**\ncounts the time left" as timer
+}
+
+caller --> types : 1. builds a value
+caller --> holler : 2. show(value, key)
+holler --> entry : 3. queues one entry per message
+holler --> handle : 4. returns a handle
+host --> holler : 5. reads the queue
+host --> frame : 6. prepares a frame\nfor each visible entry
+host --> lambda : 7. hands the value over
+lambda --> message : 8. calls HollerMessage(…)
+message --> animated : 9. wraps the card\nin its animation
+animated --> card : 10. draws
+card --> timer : 11. runs
+card --> entry : 12. reports the close
+entry --> handle : 13. resumes awaitDismiss()
+
+@enduml
