@@ -51,7 +51,7 @@ class HollerUiTest : UiTest() {
 
         onNodeWithText("left:", substring = true).assertDoesNotExist()
 
-        advanceTimeBy(60_000)
+        advanceTimeBy(PAST_ANY_DURATION)
 
         reasons.shouldBeEmpty()
         onNodeWithContentDescription(CLOSE_DESCRIPTION).assertExists()
@@ -100,7 +100,7 @@ class HollerUiTest : UiTest() {
 
         advanceTimeBy(1_000)
         onNodeWithContentDescription(EXPAND_DESCRIPTION).performClick()
-        advanceTimeBy(10_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         onNodeWithText("Details").assertExists()
         onNodeWithContentDescription(COLLAPSE_DESCRIPTION).assertExists()
@@ -108,7 +108,7 @@ class HollerUiTest : UiTest() {
         reasons.shouldBeEmpty()
 
         onNodeWithContentDescription(COLLAPSE_DESCRIPTION).performClick()
-        advanceTimeBy(10_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         onNodeWithText("Saved").assertExists()
         onNodeWithText("left:", substring = true).assertDoesNotExist()
@@ -177,7 +177,7 @@ class HollerUiTest : UiTest() {
         onNodeWithText("Okay").assertExists()
         onNodeWithText("left:", substring = true).assertDoesNotExist()
 
-        advanceTimeBy(60_000)
+        advanceTimeBy(PAST_ANY_DURATION)
 
         onNodeWithText("Saved").assertExists()
         reasons.shouldBeEmpty()
@@ -291,7 +291,7 @@ class HollerUiTest : UiTest() {
             moveBy(Offset(PAUSE_TEST_DRAG, 0f))
         }
 
-        advanceTimeBy(20_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         onNodeWithText("left:4").assertExists()
         reasons.shouldBeEmpty()
@@ -315,7 +315,7 @@ class HollerUiTest : UiTest() {
             moveBy(Offset(PAUSE_TEST_DRAG, 0f))
         }
 
-        advanceTimeBy(20_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         reasons.shouldBeEmpty()
 
@@ -336,7 +336,7 @@ class HollerUiTest : UiTest() {
             )
         }
 
-        advanceTimeBy(20_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         reasons shouldBe listOf(HollerDismissReason.Swipe)
     }
@@ -387,7 +387,7 @@ class HollerUiTest : UiTest() {
         advanceTimeBy(1_100)
         onNodeWithText("Saved").performTouchInput { down(center) }
 
-        advanceTimeBy(20_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         onNodeWithText("left:4").assertExists()
         reasons.shouldBeEmpty()
@@ -412,7 +412,7 @@ class HollerUiTest : UiTest() {
         onNodeWithText("left:3").assertExists()
 
         onNodeWithText("Saved").performTouchInput { moveBy(Offset(PAUSE_TEST_DRAG, 0f)) }
-        advanceTimeBy(20_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         onNodeWithText("left:3").assertExists()
         reasons.shouldBeEmpty()

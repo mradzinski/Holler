@@ -11,6 +11,19 @@ import androidx.compose.ui.test.ExperimentalTestApi
 // so every platform advances from the same state. The tests use them in place of `mainClock`'s own.
 
 /**
+ * Longer than a message with the short duration (5 seconds) stays on screen, in milliseconds. Advancing
+ * by it is enough to show that such a message's timer is held or stopped: a running one would have
+ * closed the message. Every frame of an advance is drawn, so a test waits no longer than it must.
+ */
+internal const val PAST_SHORT_DURATION: Long = 7_000L
+
+/**
+ * Longer than the longest ready-made duration (10 seconds), in milliseconds. Advancing by it is enough
+ * to show that a message has no timer at all.
+ */
+internal const val PAST_ANY_DURATION: Long = 12_000L
+
+/**
  * Advances the test clock, after telling Compose about any state the test body has changed.
  *
  * @param milliseconds how far to advance the clock.

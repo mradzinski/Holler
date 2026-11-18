@@ -47,7 +47,7 @@ class HollerMouseUiTest {
         advanceTimeBy(1_100)
         onNodeWithText(MOUSE_TEST_TITLE).performMouseInput { moveTo(center) }
 
-        advanceTimeBy(20_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         onNodeWithText("left:4").assertExists()
         reasons.shouldBeEmpty()
@@ -73,7 +73,7 @@ class HollerMouseUiTest {
             release()
         }
 
-        advanceTimeBy(20_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         reasons.shouldBeEmpty()
 

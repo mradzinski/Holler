@@ -95,7 +95,7 @@ class HollerReplaceUiTest : UiTest() {
 
         onNodeWithContentDescription(COLLAPSE_DESCRIPTION).assertExists()
 
-        advanceTimeBy(10_000)
+        advanceTimeBy(PAST_SHORT_DURATION)
 
         onNodeWithText("First").assertExists()
 
