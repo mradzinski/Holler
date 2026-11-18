@@ -1,14 +1,28 @@
+![Holler: on-screen messages for Compose Multiplatform, on Android, iOS, Desktop and Web](docs/banner.png)
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.mradzinski/holler?style=flat-square)](https://central.sonatype.com/artifact/io.github.mradzinski/holler)
+[![Build](https://img.shields.io/github/actions/workflow/status/mradzinski/Holler/build.yml?branch=main&style=flat-square&label=build)](https://github.com/mradzinski/Holler/actions/workflows/build.yml)
+[![Coverage](https://img.shields.io/codecov/c/github/mradzinski/Holler?style=flat-square&label=coverage)](https://codecov.io/gh/mradzinski/Holler)
+
 # Holler
 
-On-screen messages (toasts) for Compose Multiplatform. One implementation in common code, so a
+On-screen messages for Compose Multiplatform. One implementation in common code, so a
 message looks and behaves the same on **Android, iOS, Desktop and Web**, and it takes its look from
 your app's Material theme.
 
-- Title, optional long text (expandable), icon, actions, countdown and progress bar
-- Close button and swipe-to-dismiss, and a timer that stops when the user expands the message
-- Queue and stacking through a host, configurable enter/exit animations
+- Title, optional long text that expands, icon, actions, countdown and progress bar
+- Shown as plain text, or as one of your app's own objects that the host gives a look, so a view model
+  carries nothing visual
+- Actions next to the title, under the text or in the strip at the bottom; a close button at the top, at
+  the bottom, or none
+- Swipe to dismiss, and a timer that pauses while the message is pressed or hovered and stops when the
+  user expands it
+- Messages one under the other or in a pile, with a queue behind them, and ready-made or custom enter and
+  exit animations
+- Replace or close a message by its key, and wait to learn how it ended
 - Follows the app's `MaterialTheme` by default: colors, typeface and shape, in light and in dark
-- Colors, shape, text styles and shadow are all replaceable, for a look of your own
+- Colors, shape, text styles and shadow are all replaceable, for every message or for one
+- Safe to call from any thread
 
 ## Contents
 
@@ -71,10 +85,8 @@ Everything the library offers is in the package `io.github.mradzinski.holler`.
 
 ```kotlin
 // build.gradle.kts, commonMain dependencies
-implementation("io.github.mradzinski:holler:0.1.0")
+implementation("io.github.mradzinski:holler:1.0.0")
 ```
-
-Not published yet: this is the coordinate it will have on Maven Central.
 
 With Gradle, the one line above is all you need on every platform: an Android-only or desktop-only
 project uses it as it is.
@@ -171,42 +183,14 @@ The pieces used above are explained next.
 
 | Concept | In code | What it is |
 |---|---|---|
+| [Host](#host) | `HollerHost` | The composable that draws the messages of a `Holler`. |
 | [Message](#message) | `show(…)`, `HollerMessage(…)` | One card on screen: a title and its optional parts. |
 | [Holler](#holler) | `Holler` | Holds the messages. It is what your code calls to show and dismiss them. |
-| [Host](#host) | `HollerHost` | The composable that draws the messages of a `Holler`. |
 | [Handle](#handle) | `HollerHandle` | Your reference to one message you showed. |
 | [Key](#key) | `key` | A value that names a message, so any code can replace or dismiss it. |
 | [Actions scope](#actions-scope) | `HollerActionsScope` | What the `actions` slot can call to close its own message. |
 | [Duration and timer](#duration-and-timer) | `HollerDuration` | How long a message stays, and what stops or pauses the count. |
 | [Dismiss reason](#dismiss-reason) | `HollerDismissReason` | Why a message closed, returned by `awaitDismiss()`. |
-
-### Message
-
-A message is one card: a title that is always visible, plus an optional long text, icon, actions
-and countdown. The library draws it, counts its time down and closes it. Every message can be swiped
-away, and has a close button unless you place it elsewhere or leave it out.
-
-There are two ways to show one. Plain text goes straight into `show(title = …)`. Anything richer is
-shown as one of your own objects, with `show(value)`, and drawn by the host with `HollerMessage(…)`.
-Either way the host decides how a message looks; the code that shows it never does.
-
-### Holler
-
-`Holler` holds the messages that are on screen and the ones waiting their turn. It is the
-object your code talks to:
-
-```kotlin
-val holler = remember { Holler() }
-
-holler.show(title = "Link copied") // adds a message
-holler.dismiss("upload")           // closes the message with that key
-holler.dismissAll()                // closes every message
-```
-
-It draws nothing by itself and needs no coroutine or composable to be called, so it can be used
-from click handlers, view models or anywhere else. `remember { Holler() }` keeps one for a
-screen; to share one across the app, create it with `Holler()` wherever you keep app-wide
-objects and hand that instance to the host.
 
 ### Host
 
@@ -243,6 +227,34 @@ The host decides everything the messages have in common:
 - **What a screen reader announces** for their buttons: see [Accessibility](#accessibility).
 
 One `Holler` goes with one host.
+
+### Message
+
+A message is one card: a title that is always visible, plus an optional long text, icon, actions
+and countdown. The library draws it, counts its time down and closes it. Every message can be swiped
+away, and has a close button unless you place it elsewhere or leave it out.
+
+There are two ways to show one. Plain text goes straight into `show(title = …)`. Anything richer is
+shown as one of your own objects, with `show(value)`, and drawn by the host with `HollerMessage(…)`.
+Either way the host decides how a message looks; the code that shows it never does.
+
+### Holler
+
+`Holler` holds the messages that are on screen and the ones waiting their turn. It is the
+object your code talks to:
+
+```kotlin
+val holler = remember { Holler() }
+
+holler.show(title = "Link copied") // adds a message
+holler.dismiss("upload")           // closes the message with that key
+holler.dismissAll()                // closes every message
+```
+
+It draws nothing by itself and needs no coroutine or composable to be called, so it can be used
+from click handlers, view models or anywhere else. `remember { Holler() }` keeps one for a
+screen; to share one across the app, create it with `Holler()` wherever you keep app-wide
+objects and hand that instance to the host.
 
 ### Handle
 
