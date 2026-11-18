@@ -1,6 +1,7 @@
 package io.github.mradzinski.holler.sample
 
 import android.content.Context
+import io.github.mradzinski.holler.sample.core.input.DeviceInput
 import io.github.mradzinski.holler.sample.core.network.ConnectivityNetworkMonitor
 import io.github.mradzinski.holler.sample.core.network.NetworkMonitor
 import io.github.mradzinski.holler.sample.di.startSampleKoin
@@ -17,6 +18,7 @@ fun startSample(context: Context) {
     startSampleKoin(
         platformModule = module {
             single<NetworkMonitor> { ConnectivityNetworkMonitor(appContext) }
+            single { DeviceInput(hasTouchScreen = true) }
         },
     )
 }

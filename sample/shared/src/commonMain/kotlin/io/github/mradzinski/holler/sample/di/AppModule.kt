@@ -66,7 +66,7 @@ internal val appModule: Module = module {
  * Starts Koin with the shared module and a platform's own. Each platform's `startSample` calls it, once,
  * before the first screen is drawn.
  *
- * @param platformModule the platform's bindings: its `NetworkMonitor`.
+ * @param platformModule the platform's bindings: its `NetworkMonitor` and its `DeviceInput`.
  */
 internal fun startSampleKoin(platformModule: Module) {
     startKoin { modules(appModule, platformModule) }

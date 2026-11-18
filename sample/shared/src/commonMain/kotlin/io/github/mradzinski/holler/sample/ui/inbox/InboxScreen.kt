@@ -1,21 +1,21 @@
 package io.github.mradzinski.holler.sample.ui.inbox
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,9 +33,9 @@ import io.github.mradzinski.holler.sample.ui.inbox.model.EmailItemUiModel
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * The inbox screen: the list of emails, with buttons to check for new ones and to open the settings.
- * A row opens its email when pressed and deletes it when swiped away. The screen holds no state of
- * its own.
+ * The inbox screen: the list of emails, with a button to open the settings. Pulling the list down
+ * checks for new emails; where there is no touch screen to pull on, a button does the same. A row
+ * opens its email when pressed and deletes it when swiped away. The screen holds no state of its own.
  *
  * @param state what to draw.
  * @param onEvent called with everything the user does on the screen.
@@ -45,8 +45,10 @@ internal fun InboxScreen(state: InboxUiState, onEvent: (InboxEvent) -> Unit) {
     SampleScaffold(
         title = stringResource(Res.string.inbox_title),
         actions = {
-            IconButton(onClick = { onEvent(InboxEvent.OnRefreshClick) }) {
-                Icon(Icons.Default.Refresh, contentDescription = stringResource(Res.string.inbox_refresh))
+            if (state.showRefreshButton) {
+                IconButton(onClick = { onEvent(InboxEvent.OnRefreshClick) }) {
+                    Icon(Icons.Default.Refresh, contentDescription = stringResource(Res.string.inbox_refresh))
+                }
             }
 
             IconButton(onClick = { onEvent(InboxEvent.OnSettingsClick) }) {
@@ -54,11 +56,15 @@ internal fun InboxScreen(state: InboxUiState, onEvent: (InboxEvent) -> Unit) {
             }
         },
     ) { innerPadding ->
-        Column(Modifier.fillMaxSize().padding(innerPadding.withoutBottom())) {
-            if (state.isRefreshing) {
-                LinearProgressIndicator(Modifier.fillMaxWidth())
-            }
-
+        // Material's pull to refresh: it shows its indicator while the list is pulled and for as long as
+        // a check for new emails runs, whoever started it.
+        PullToRefreshBox(
+            isRefreshing = state.isRefreshing,
+            onRefresh = { onEvent(InboxEvent.OnRefreshPull) },
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding.withoutBottom()),
+        ) {
             if (state.emails.isEmpty()) {
                 EmptyInbox()
             } else {
@@ -103,12 +109,14 @@ private fun EmailList(
     }
 }
 
-/** What the inbox shows when it has no emails. */
+/** What the inbox shows when it has no emails. It scrolls, so that an empty inbox can be pulled down too. */
 @Composable
 private fun EmptyInbox() {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
     ) {
         Text(
             text = stringResource(Res.string.inbox_empty),

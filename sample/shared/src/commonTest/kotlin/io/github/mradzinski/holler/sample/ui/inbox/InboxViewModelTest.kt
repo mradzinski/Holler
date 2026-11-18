@@ -2,6 +2,7 @@ package io.github.mradzinski.holler.sample.ui.inbox
 
 import app.cash.turbine.test
 import io.github.mradzinski.holler.Holler
+import io.github.mradzinski.holler.sample.core.input.DeviceInput
 import io.github.mradzinski.holler.sample.core.navigation.AppNavigator
 import io.github.mradzinski.holler.sample.core.navigation.EmailKey
 import io.github.mradzinski.holler.sample.core.navigation.InboxKey
@@ -53,11 +54,30 @@ class InboxViewModelTest : MainDispatcherTest() {
     fun `a refresh that works shows the new email and asks for no message`() = runTest {
         val viewModel = viewModel()
 
-        viewModel.onEvent(InboxEvent.OnRefreshClick)
+        viewModel.onEvent(InboxEvent.OnRefreshPull)
         advanceUntilIdle()
 
         viewModel.state.value.emails.first().id shouldBe INCOMING_EMAIL.id
         holler.messages.shouldBeEmpty()
+    }
+
+    @Test
+    fun `a device with a touch screen gets no refresh button`() = runTest {
+        val viewModel = viewModel(hasTouchScreen = true)
+
+        viewModel.state.value.showRefreshButton.shouldBeFalse()
+    }
+
+    @Test
+    fun `a device without a touch screen gets a refresh button that checks for new emails`() = runTest {
+        val viewModel = viewModel(hasTouchScreen = false)
+
+        viewModel.state.value.showRefreshButton.shouldBeTrue()
+
+        viewModel.onEvent(InboxEvent.OnRefreshClick)
+        advanceUntilIdle()
+
+        viewModel.state.value.emails.first().id shouldBe INCOMING_EMAIL.id
     }
 
     @Test
@@ -67,7 +87,7 @@ class InboxViewModelTest : MainDispatcherTest() {
         viewModel.state.test {
             awaitItem().isRefreshing.shouldBeFalse()
 
-            viewModel.onEvent(InboxEvent.OnRefreshClick)
+            viewModel.onEvent(InboxEvent.OnRefreshPull)
 
             awaitItem().isRefreshing.shouldBeTrue()
 
@@ -83,7 +103,7 @@ class InboxViewModelTest : MainDispatcherTest() {
         val viewModel = viewModel()
         connectivity.isOnline.value = false
 
-        viewModel.onEvent(InboxEvent.OnRefreshClick)
+        viewModel.onEvent(InboxEvent.OnRefreshPull)
         advanceUntilIdle()
 
         holler.messages.map { it.value } shouldBe listOf(AppMessage.RefreshFailed)
@@ -150,10 +170,16 @@ class InboxViewModelTest : MainDispatcherTest() {
     /**
      * Builds the view model and starts watching its state, as the screen would.
      *
+     * @param hasTouchScreen whether the device the app runs on has a touch screen.
      * @return the view model.
      */
-    private fun TestScope.viewModel(): InboxViewModel {
-        val viewModel = InboxViewModel(testEmailRepository(connectivity, scope = this), holler, navigator)
+    private fun TestScope.viewModel(hasTouchScreen: Boolean = true): InboxViewModel {
+        val viewModel = InboxViewModel(
+            emails = testEmailRepository(connectivity, scope = this),
+            holler = holler,
+            navigator = navigator,
+            input = DeviceInput(hasTouchScreen),
+        )
 
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect {} }
 

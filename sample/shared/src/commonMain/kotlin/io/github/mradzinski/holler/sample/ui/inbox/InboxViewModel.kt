@@ -3,6 +3,7 @@ package io.github.mradzinski.holler.sample.ui.inbox
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.mradzinski.holler.Holler
+import io.github.mradzinski.holler.sample.core.input.DeviceInput
 import io.github.mradzinski.holler.sample.core.navigation.EmailKey
 import io.github.mradzinski.holler.sample.core.navigation.InboxKey
 import io.github.mradzinski.holler.sample.core.navigation.Navigator
@@ -22,11 +23,13 @@ import kotlinx.coroutines.launch
  * @param emails where the emails come from.
  * @param holler shows the messages for a deleted email and a failed refresh.
  * @param navigator opens the other screens.
+ * @param input tells whether the device has a touch screen, which decides if the screen needs a refresh button.
  */
 internal class InboxViewModel(
     private val emails: EmailRepository,
     private val holler: Holler,
     private val navigator: Navigator,
+    private val input: DeviceInput,
 ) : ViewModel() {
 
     /** The state the inbox screen draws. */
@@ -34,8 +37,13 @@ internal class InboxViewModel(
         InboxUiState(
             emails = inbox.map { it.toItemUiModel() },
             isRefreshing = refreshing,
+            showRefreshButton = !input.hasTouchScreen,
         )
-    }.stateIn(viewModelScope, WhileScreenIsWatching, InboxUiState())
+    }.stateIn(
+        scope = viewModelScope,
+        started = WhileScreenIsWatching,
+        initialValue = InboxUiState(showRefreshButton = !input.hasTouchScreen),
+    )
 
     /**
      * Handles an event of the inbox screen.
@@ -46,6 +54,7 @@ internal class InboxViewModel(
         when (event) {
             is InboxEvent.OnEmailClick -> openEmail(event.emailId)
             is InboxEvent.OnEmailSwipe -> delete(event.emailId)
+            is InboxEvent.OnRefreshPull -> refresh()
             is InboxEvent.OnRefreshClick -> refresh()
             is InboxEvent.OnSettingsClick -> navigator.navigate(SettingsKey)
         }

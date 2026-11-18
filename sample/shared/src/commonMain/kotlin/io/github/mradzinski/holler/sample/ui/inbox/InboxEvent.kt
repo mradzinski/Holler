@@ -19,7 +19,10 @@ internal sealed interface InboxEvent : UiEvent {
      */
     data class OnEmailSwipe(val emailId: Long) : InboxEvent
 
-    /** The button that checks for new emails was pressed. */
+    /** The list was pulled down to check for new emails. */
+    data object OnRefreshPull : InboxEvent
+
+    /** The button that checks for new emails was pressed. It is there where the list cannot be pulled. */
     data object OnRefreshClick : InboxEvent
 
     /** The settings button was pressed. */
