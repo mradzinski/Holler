@@ -1,11 +1,19 @@
-# Builds the library and the sample, runs every test and lint, and sends the coverage of the library to
-# Codecov. The "build" and "coverage" badges at the top of the README read the results of this workflow.
+# Checks the library and the sample on every platform, and sends the coverage of the library to Codecov.
+# The "build" and "coverage" badges at the top of the README read the results of this workflow.
+#
+# The work is split into four jobs that run at the same time, so a run takes as long as the slowest job and
+# not as long as all of them together. Only the iOS job needs a Mac; the others run on Linux, whose free
+# runner is the larger one. Together they cover what `./gradlew build` covers, except packaging the sample
+# apps: their code is still compiled.
 name: build
 
 on:
   push:
     branches: [main]
+    # A change to the documentation alone cannot break the build.
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', 'NOTICE']
   pull_request:
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', 'NOTICE']
 
 # A newer push to the same branch makes the run of the older one pointless.
 concurrency:
@@ -16,10 +24,10 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    # macOS, because the iOS tests need Xcode and a simulator. It also has Chrome, for the browser tests.
-    runs-on: macos-latest
-    timeout-minutes: 60
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Check out the code
@@ -35,10 +43,35 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # Everything `./gradlew build` covers: every target compiled, the tests on desktop, Android
-      # (Robolectric), the iOS simulator and the browser, ktlint, detekt and the coverage limit.
-      - name: Build and test
-        run: ./gradlew build :holler:koverXmlReport
+      - name: Run ktlint and detekt
+        run: ./gradlew ktlintCheck detekt
+
+  desktop-and-android:
+    name: Desktop and Android
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # The library's and the sample's tests on desktop and on Android (through Robolectric), the coverage
+      # limit of the library, and the code of the desktop and Android sample apps compiled.
+      - name: Test on desktop and Android
+        run: >
+          ./gradlew
+          :holler:jvmTest :holler:testAndroidHostTest :holler:koverVerify :holler:koverXmlReport
+          :sample:shared:jvmTest :sample:shared:testAndroidHostTest
+          :sample:desktopApp:compileKotlin :sample:androidApp:compileDebugKotlin
 
       - name: Send the coverage to Codecov
         uses: codecov/codecov-action@v5
@@ -51,7 +84,93 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
-          path: |
-            **/build/reports/tests/
-            holler/build/outputs/roborazzi/
+          name: test-reports-desktop-and-android
+          path: '**/build/reports/tests/'
+
+  web:
+    name: Web
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # The library's and the sample's tests in headless Chrome, on Wasm and on JavaScript, and the code of
+      # the web sample app compiled for both.
+      - name: Test in the browser
+        run: >
+          ./gradlew
+          :holler:wasmJsBrowserTest :holler:jsBrowserTest
+          :sample:shared:wasmJsBrowserTest :sample:shared:jsBrowserTest
+          :sample:webApp:compileKotlinWasmJs :sample:webApp:compileKotlinJs
+
+      - name: Keep the test reports of a failed run
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-web
+          path: '**/build/reports/tests/'
+
+  ios:
+    name: iOS
+    # The only job that needs a Mac: the iOS tests run in a simulator, which comes with Xcode.
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # The project's own settings ask for 4 GB for Gradle and 3 GB for the Kotlin compiler, which is all the
+      # memory this runner has (7 GB), with nothing left for the simulator. Settings in the user's Gradle
+      # folder win over the project's. This job compiles almost only for iOS, which Gradle does itself, so
+      # Gradle keeps its 4 GB and the Kotlin compiler gets less.
+      - name: Fit Gradle's memory to the runner
+        run: |
+          mkdir -p ~/.gradle
+          cat >> ~/.gradle/gradle.properties <<'PROPERTIES'
+          org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8
+          kotlin.daemon.jvmargs=-Xmx1536m
+          PROPERTIES
+
+      # Kotlin/Native downloads its compiler and the iOS platform libraries here on first use. Keeping the
+      # folder between runs saves that download; it only changes when the versions do.
+      - name: Keep the Kotlin/Native toolchain between runs
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+
+      # The library's and the sample's tests on the iOS simulator, and the library compiled for the two
+      # other iOS targets, a device and an Intel simulator.
+      - name: Test on the iOS simulator
+        run: >
+          ./gradlew
+          :holler:iosSimulatorArm64Test :sample:shared:iosSimulatorArm64Test
+          :holler:compileKotlinIosArm64 :holler:compileKotlinIosX64
+
+      - name: Keep the test reports of a failed run
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-ios
+          path: '**/build/reports/tests/'

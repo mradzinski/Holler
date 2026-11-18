@@ -1,0 +1,91 @@
+# Publishes the library to Maven Central. It never runs by itself: someone starts it by hand from the
+# Actions tab ("Run workflow") and types the version to publish, which must be the one in gradle.properties.
+#
+# `./gradlew publishLibrary` first runs every test of the library on every platform, lint, the coverage limit
+# and the comparison of the Android screenshots. If anything fails, nothing is published.
+#
+# Secrets it needs (repository Settings > Secrets and variables > Actions):
+#   MAVEN_CENTRAL_USERNAME, MAVEN_CENTRAL_PASSWORD  the user token of the Central Portal, not the login
+#   SIGNING_KEY                                     the private key, from `gpg --export-secret-keys --armor <key id>`
+#   SIGNING_KEY_PASSWORD                            only if the key was created with a password
+name: publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The version to publish, exactly as VERSION_NAME in gradle.properties (for example 1.0.0)
+        required: true
+        type: string
+
+# Two publications of the same version must never run at once.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    # A release is cut from main only.
+    if: github.ref == 'refs/heads/main'
+    # macOS, because the iOS artifacts and tests need Xcode. It also has Chrome, for the browser tests.
+    runs-on: macos-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      # A version on Maven Central can never be replaced, so the person starting the run confirms it.
+      - name: Check the version typed against gradle.properties
+        env:
+          TYPED_VERSION: ${{ inputs.version }}
+        run: |
+          declared=$(grep '^VERSION_NAME=' gradle.properties | cut -d= -f2)
+
+          if [ "$TYPED_VERSION" != "$declared" ]; then
+            echo "::error::The version typed ($TYPED_VERSION) is not the one in gradle.properties ($declared)."
+            exit 1
+          fi
+
+      # The same Java release the project is built with locally.
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # The project's own settings ask for 4 GB for Gradle and 3 GB for the Kotlin compiler, which is all the
+      # memory this runner has (7 GB), with nothing left for the tests, the simulator and Chrome. Settings in
+      # the user's Gradle folder win over the project's. Two workers at a time keep the tests from piling up.
+      - name: Fit Gradle's memory to the runner
+        run: |
+          mkdir -p ~/.gradle
+          cat >> ~/.gradle/gradle.properties <<'PROPERTIES'
+          org.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8
+          kotlin.daemon.jvmargs=-Xmx2g
+          org.gradle.workers.max=2
+          PROPERTIES
+
+      - name: Test everything, then publish and release
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: ./gradlew publishLibrary
+
+      # When a test fails, its report says which one and why.
+      - name: Keep the test reports of a failed run
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            **/build/reports/tests/
+            holler/build/outputs/roborazzi/
