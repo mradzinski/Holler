@@ -16,7 +16,7 @@ rectangle "Your app" as app #F4F1FA {
 
 rectangle "Holler: public API" as api #EEF6F0 {
     component "**Holler**\nthe queue of messages" as holler
-    component "**HollerHost**\ndraws the first maxVisible messages" as host
+    component "**HollerHost**\ndraws the visible messages,\nin a column or in a pile" as host
     component "**HollerMessage**\none card and its options" as message
     component "**HollerHandle**\nclose a message, or wait for it to close" as handle
 }
@@ -25,7 +25,7 @@ rectangle "Holler: internals" as internals #FBF3E6 {
     component "**HollerEntry**\none message: its place, key and stage" as entry
     component "**HostedFrame**\nwhat the host prepared for one message" as frame
     component "**AnimatedCard**\nenter and exit animation" as animated
-    component "**HollerCard**\nlayout, buttons, swipe" as card
+    component "**HollerCard**\nlayout, buttons, swipe and press" as card
     component "**HollerTimer**\ncounts the time left" as timer
 }
 

@@ -25,9 +25,13 @@ note right of caller
     Nothing is drawn yet.
 end note
 
-== Draw (when the message is among the first maxVisible) ==
+== Draw (when the message is among the maxVisible the host shows) ==
 
 host -> holler : read the queue
+note right of host
+    In a column the host shows the oldest messages.
+    In a pile it shows the newest, the latest in front.
+end note
 host -> entry : markShown(), stage = Visible
 host -> lambda : message(value)
 note over host, lambda
@@ -45,8 +49,9 @@ entry --> caller : awaitDismiss() returns the reason
 message -> card : play the exit animation
 host -> holler : remove the entry once the exit has ended
 note over holler, host
-    The next queued message, if any,
-    now becomes visible and its timer starts.
+    The next message, if any, takes the free place.
+    A timer only runs while its message is visible:
+    one that waits, or is covered in a pile, is held.
 end note
 
 == Replace (show with a key that is still alive) ==

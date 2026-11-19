@@ -82,6 +82,11 @@ package "Draw" {
         size: Dp
         icon: slot
     }
+
+    enum HollerStackingStyle {
+        Column
+        Pile
+    }
 }
 
 package "Behavior of one message" {
@@ -96,11 +101,6 @@ package "Behavior of one message" {
     enum HollerStopTrigger {
         Expand
         None
-    }
-
-    enum HollerStackingStyle {
-        Column
-        Pile
     }
 
     enum HollerActionsPosition {
@@ -150,6 +150,11 @@ package "Look and motion" {
         progressBarHeight
     }
 
+    class LocalHollerColors <<composition local>> {
+        current: HollerColors
+        read-only: the colors of the message being drawn
+    }
+
     class HollerDefaults <<object>> {
         colors(): HollerColors <<composable>>
         colors(colorScheme): HollerColors
@@ -174,6 +179,13 @@ package "Look and motion" {
         {static} None
     }
 
+    class "HollerAnimation()" as HollerAnimationFactory <<function>> {
+        messageEnter: EnterTransition
+        messageExit: ExitTransition
+        messageContentEnter: EnterTransition = None
+        messageContentExit: ExitTransition = None
+    }
+
     class HollerAnimationContext <<data>> {
         alignment: Alignment
         layoutDirection: LayoutDirection
@@ -194,6 +206,9 @@ HollerMessage -[hidden]right-> HollerIconRing
 HollerDefaults .up.> HollerColors : builds from the theme
 HollerDefaults .up.> HollerStyle : builds from the theme
 HollerAnimation .right.> HollerAnimationContext : receives
+HollerAnimationFactory .up.> HollerAnimation : builds one from plain transitions
+LocalHollerColors .up.> HollerColors : gives to slot content
+HollerHost .down.> HollerStackingStyle : places its messages by
 
 ' Invisible links that only place the groups: behavior and look sit under the composables.
 HollerMessage -[hidden]down-> HollerDuration
@@ -201,7 +216,6 @@ HollerDuration -[hidden]right-> HollerStopTrigger
 HollerStopTrigger -[hidden]right-> HollerActionsVisibility
 HollerActionsVisibility -[hidden]right-> HollerActionsPosition
 HollerActionsPosition -[hidden]right-> HollerClosePosition
-HollerClosePosition -[hidden]right-> HollerStackingStyle
 HollerActionsScope -[hidden]down-> HollerColors
 HollerColors -[hidden]right-> HollerStyle
 HollerStyle -[hidden]right-> HollerAnimation

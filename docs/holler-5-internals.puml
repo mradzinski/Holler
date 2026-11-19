@@ -47,6 +47,9 @@ package "Internal: drawing" #FBF3E6 {
         context: HollerAnimationContext
         animation, colors, style: the host's defaults
         descriptions: accessibility texts
+        expandIcon, closeIcon: the host's symbols
+        animateOnPress: Boolean
+        pile: PilePlace? (the card's place, in a pile)
         drawn: was HollerMessage called?
         AnimatedCard(animation, style, card)
     }
@@ -78,6 +81,23 @@ package "Internal: drawing" #FBF3E6 {
         smaller and without content
     }
 
+    class PilePlace {
+        covered: Boolean
+        depth: how many cards are in front
+        press: the front card's press, to follow
+    }
+
+    class CardPlace {
+        leaving: Boolean
+        animateOnPress: Boolean
+        covered: Boolean
+    }
+
+    class CardGestures {
+        scale: how far the card gives under a press
+        holdsTimer: covered, dragged, pressed or hovered
+    }
+
     class SwipeToDismiss {
         the sideways drag that closes a card
     }
@@ -101,8 +121,13 @@ HollerMessage ..> HollerCard : draws
 HostedFrame --> HollerEntry : points at
 
 HollerCard *-- HollerTimer : owns
-HollerCard *-- SwipeToDismiss : owns
-HollerCard *-- PressOrHover : owns
+HollerCard *-- CardGestures : owns
+CardGestures *-- SwipeToDismiss : groups
+CardGestures *-- PressOrHover : groups
+Pile ..> PilePlace : gives each card
+HostedFrame --> PilePlace : carries
+HollerMessage ..> CardPlace : tells the card where it stands with
+HollerCard ..> CardPlace : reads
 HollerCard ..> HollerEntry : calls dismiss(reason) on
 
 @enduml

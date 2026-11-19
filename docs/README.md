@@ -16,5 +16,5 @@ The diagrams are written by hand, so they are a snapshot: update the `.puml` fil
 render it with [PlantUML](https://plantuml.com) (which needs Graphviz):
 
 ```bash
-plantuml -tpng -tsvg docs/*.puml
+plantuml -tpng docs/*.puml
 ```

@@ -18,9 +18,9 @@ state "The message in the queue (HollerEntry.Stage)" as stages {
 state "Its countdown (HollerTimer.Phase)" as phases {
     [*] --> Counting : the card appears
     Counting : time is passing
-    Counting --> Paused : dragged, pressed or hovered
+    Counting --> Paused : dragged, pressed or hovered,\nor covered by a newer message in a pile
     Paused : held for a moment
-    Paused --> Counting : let go
+    Paused --> Counting : let go,\nor in front again
     Counting --> Stopped : expanded by the user\n(as stoppableBy allows)
     Stopped : stays until closed;\nbar and countdown are gone
     Counting --> Finished : the full time has passed
