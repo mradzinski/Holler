@@ -24,6 +24,10 @@ your app's Material theme.
 - Colors, shape, text styles and shadow are all replaceable, for every message or for one
 - Safe to call from any thread
 
+| Stack | Pile |
+|:---:|:---:|
+| <img src="docs/demo-stack.gif" alt="The sample app with two messages shown one under the other" width="280"> | <img src="docs/demo-pile.gif" alt="The sample app with messages shown as a pile, the newest in front" width="280"> |
+
 ## Contents
 
 - [Before you begin](#before-you-begin)
@@ -85,7 +89,7 @@ Everything the library offers is in the package `io.github.mradzinski.holler`.
 
 ```kotlin
 // build.gradle.kts, commonMain dependencies
-implementation("io.github.mradzinski:holler:1.0.0")
+implementation("io.github.mradzinski:holler:1.0.0-rc01")
 ```
 
 With Gradle, the one line above is all you need on every platform: an Android-only or desktop-only
