@@ -721,8 +721,12 @@ class AppHollerHostTest {
         val holler = Holler()
         var undone: Long? = null
 
-        setContent { AppHollerHost(holler, onUndo = { undone = it }) } // your HollerHost and its content
+        // A message's timer keeps the test from ever being idle, so the clock is moved by hand.
+        mainClock.autoAdvance = false
+
         holler.show(AppMessage.EmailDeleted(emailId = 7))
+        setContent { AppHollerHost(holler, onUndo = { undone = it }) } // your HollerHost and its content
+        mainClock.advanceTimeBy(1_000) // lets the message enter
 
         onNodeWithText("Email deleted").assertExists()
         onNodeWithText("Undo").performClick()

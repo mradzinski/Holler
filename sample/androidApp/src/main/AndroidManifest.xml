@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Lets the sample's network monitor tell whether the device is online. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Without it Android reports no active network to the app, so the monitor would always say "offline". -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".SampleApplication"
