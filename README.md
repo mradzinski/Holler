@@ -1002,6 +1002,20 @@ Run the tests (desktop, then Android host):
 ./gradlew :holler:testAndroidHostTest
 ```
 
+Check the public API. It is recorded in `holler/api/`, and the build fails when the code no longer
+matches the record, so the API cannot change by accident:
+
+```bash
+./gradlew :holler:checkKotlinAbi
+```
+
+If you changed the public API on purpose, record it again and commit the files in `holler/api/`
+with your change, so the difference can be reviewed:
+
+```bash
+./gradlew :holler:updateKotlinAbi
+```
+
 ## Architecture
 
 How Holler works inside, as five UML diagrams. Read them in this order; each one is written in

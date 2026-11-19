@@ -1,0 +1,301 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64, js, wasmJs]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <holler-root:holler>
+final enum class io.github.mradzinski.holler/HollerActionsPosition : kotlin/Enum<io.github.mradzinski.holler/HollerActionsPosition> { // io.github.mradzinski.holler/HollerActionsPosition|null[0]
+    enum entry Bottom // io.github.mradzinski.holler/HollerActionsPosition.Bottom|null[0]
+    enum entry Middle // io.github.mradzinski.holler/HollerActionsPosition.Middle|null[0]
+    enum entry Top // io.github.mradzinski.holler/HollerActionsPosition.Top|null[0]
+
+    final val entries // io.github.mradzinski.holler/HollerActionsPosition.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.mradzinski.holler/HollerActionsPosition> // io.github.mradzinski.holler/HollerActionsPosition.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.mradzinski.holler/HollerActionsPosition // io.github.mradzinski.holler/HollerActionsPosition.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.mradzinski.holler/HollerActionsPosition> // io.github.mradzinski.holler/HollerActionsPosition.values|values#static(){}[0]
+}
+
+final enum class io.github.mradzinski.holler/HollerActionsVisibility : kotlin/Enum<io.github.mradzinski.holler/HollerActionsVisibility> { // io.github.mradzinski.holler/HollerActionsVisibility|null[0]
+    enum entry AlwaysVisible // io.github.mradzinski.holler/HollerActionsVisibility.AlwaysVisible|null[0]
+    enum entry ChevronHint // io.github.mradzinski.holler/HollerActionsVisibility.ChevronHint|null[0]
+    enum entry StartExpanded // io.github.mradzinski.holler/HollerActionsVisibility.StartExpanded|null[0]
+
+    final val entries // io.github.mradzinski.holler/HollerActionsVisibility.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.mradzinski.holler/HollerActionsVisibility> // io.github.mradzinski.holler/HollerActionsVisibility.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.mradzinski.holler/HollerActionsVisibility // io.github.mradzinski.holler/HollerActionsVisibility.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.mradzinski.holler/HollerActionsVisibility> // io.github.mradzinski.holler/HollerActionsVisibility.values|values#static(){}[0]
+}
+
+final enum class io.github.mradzinski.holler/HollerClosePosition : kotlin/Enum<io.github.mradzinski.holler/HollerClosePosition> { // io.github.mradzinski.holler/HollerClosePosition|null[0]
+    enum entry Bottom // io.github.mradzinski.holler/HollerClosePosition.Bottom|null[0]
+    enum entry None // io.github.mradzinski.holler/HollerClosePosition.None|null[0]
+    enum entry Top // io.github.mradzinski.holler/HollerClosePosition.Top|null[0]
+
+    final val entries // io.github.mradzinski.holler/HollerClosePosition.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.mradzinski.holler/HollerClosePosition> // io.github.mradzinski.holler/HollerClosePosition.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.mradzinski.holler/HollerClosePosition // io.github.mradzinski.holler/HollerClosePosition.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.mradzinski.holler/HollerClosePosition> // io.github.mradzinski.holler/HollerClosePosition.values|values#static(){}[0]
+}
+
+final enum class io.github.mradzinski.holler/HollerDismissReason : kotlin/Enum<io.github.mradzinski.holler/HollerDismissReason> { // io.github.mradzinski.holler/HollerDismissReason|null[0]
+    enum entry Action // io.github.mradzinski.holler/HollerDismissReason.Action|null[0]
+    enum entry CloseButton // io.github.mradzinski.holler/HollerDismissReason.CloseButton|null[0]
+    enum entry Programmatic // io.github.mradzinski.holler/HollerDismissReason.Programmatic|null[0]
+    enum entry Replaced // io.github.mradzinski.holler/HollerDismissReason.Replaced|null[0]
+    enum entry Swipe // io.github.mradzinski.holler/HollerDismissReason.Swipe|null[0]
+    enum entry Timeout // io.github.mradzinski.holler/HollerDismissReason.Timeout|null[0]
+
+    final val entries // io.github.mradzinski.holler/HollerDismissReason.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.mradzinski.holler/HollerDismissReason> // io.github.mradzinski.holler/HollerDismissReason.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.mradzinski.holler/HollerDismissReason // io.github.mradzinski.holler/HollerDismissReason.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.mradzinski.holler/HollerDismissReason> // io.github.mradzinski.holler/HollerDismissReason.values|values#static(){}[0]
+}
+
+final enum class io.github.mradzinski.holler/HollerStackingStyle : kotlin/Enum<io.github.mradzinski.holler/HollerStackingStyle> { // io.github.mradzinski.holler/HollerStackingStyle|null[0]
+    enum entry Column // io.github.mradzinski.holler/HollerStackingStyle.Column|null[0]
+    enum entry Pile // io.github.mradzinski.holler/HollerStackingStyle.Pile|null[0]
+
+    final val entries // io.github.mradzinski.holler/HollerStackingStyle.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.mradzinski.holler/HollerStackingStyle> // io.github.mradzinski.holler/HollerStackingStyle.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.mradzinski.holler/HollerStackingStyle // io.github.mradzinski.holler/HollerStackingStyle.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.mradzinski.holler/HollerStackingStyle> // io.github.mradzinski.holler/HollerStackingStyle.values|values#static(){}[0]
+}
+
+final enum class io.github.mradzinski.holler/HollerStopTrigger : kotlin/Enum<io.github.mradzinski.holler/HollerStopTrigger> { // io.github.mradzinski.holler/HollerStopTrigger|null[0]
+    enum entry Expand // io.github.mradzinski.holler/HollerStopTrigger.Expand|null[0]
+    enum entry None // io.github.mradzinski.holler/HollerStopTrigger.None|null[0]
+
+    final val entries // io.github.mradzinski.holler/HollerStopTrigger.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.mradzinski.holler/HollerStopTrigger> // io.github.mradzinski.holler/HollerStopTrigger.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.mradzinski.holler/HollerStopTrigger // io.github.mradzinski.holler/HollerStopTrigger.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.mradzinski.holler/HollerStopTrigger> // io.github.mradzinski.holler/HollerStopTrigger.values|values#static(){}[0]
+}
+
+abstract interface io.github.mradzinski.holler/HollerActionsScope { // io.github.mradzinski.holler/HollerActionsScope|null[0]
+    abstract fun dismiss() // io.github.mradzinski.holler/HollerActionsScope.dismiss|dismiss(){}[0]
+}
+
+abstract interface io.github.mradzinski.holler/HollerHandle { // io.github.mradzinski.holler/HollerHandle|null[0]
+    abstract val key // io.github.mradzinski.holler/HollerHandle.key|{}key[0]
+        abstract fun <get-key>(): kotlin/Any // io.github.mradzinski.holler/HollerHandle.key.<get-key>|<get-key>(){}[0]
+    abstract val value // io.github.mradzinski.holler/HollerHandle.value|{}value[0]
+        abstract fun <get-value>(): kotlin/Any? // io.github.mradzinski.holler/HollerHandle.value.<get-value>|<get-value>(){}[0]
+
+    abstract fun dismiss() // io.github.mradzinski.holler/HollerHandle.dismiss|dismiss(){}[0]
+    abstract suspend fun awaitDismiss(): io.github.mradzinski.holler/HollerDismissReason // io.github.mradzinski.holler/HollerHandle.awaitDismiss|awaitDismiss(){}[0]
+}
+
+sealed interface io.github.mradzinski.holler/HollerHostScope // io.github.mradzinski.holler/HollerHostScope|null[0]
+
+abstract class io.github.mradzinski.holler/HollerAnimation { // io.github.mradzinski.holler/HollerAnimation|null[0]
+    constructor <init>() // io.github.mradzinski.holler/HollerAnimation.<init>|<init>(){}[0]
+
+    abstract fun messageEnter(io.github.mradzinski.holler/HollerAnimationContext): androidx.compose.animation/EnterTransition // io.github.mradzinski.holler/HollerAnimation.messageEnter|messageEnter(io.github.mradzinski.holler.HollerAnimationContext){}[0]
+    abstract fun messageExit(io.github.mradzinski.holler/HollerAnimationContext): androidx.compose.animation/ExitTransition // io.github.mradzinski.holler/HollerAnimation.messageExit|messageExit(io.github.mradzinski.holler.HollerAnimationContext){}[0]
+    open fun messageContentEnter(io.github.mradzinski.holler/HollerAnimationContext): androidx.compose.animation/EnterTransition // io.github.mradzinski.holler/HollerAnimation.messageContentEnter|messageContentEnter(io.github.mradzinski.holler.HollerAnimationContext){}[0]
+    open fun messageContentExit(io.github.mradzinski.holler/HollerAnimationContext): androidx.compose.animation/ExitTransition // io.github.mradzinski.holler/HollerAnimation.messageContentExit|messageContentExit(io.github.mradzinski.holler.HollerAnimationContext){}[0]
+
+    final object Companion { // io.github.mradzinski.holler/HollerAnimation.Companion|null[0]
+        final val Default // io.github.mradzinski.holler/HollerAnimation.Companion.Default|{}Default[0]
+            final fun <get-Default>(): io.github.mradzinski.holler/HollerAnimation // io.github.mradzinski.holler/HollerAnimation.Companion.Default.<get-Default>|<get-Default>(){}[0]
+        final val Drop // io.github.mradzinski.holler/HollerAnimation.Companion.Drop|{}Drop[0]
+            final fun <get-Drop>(): io.github.mradzinski.holler/HollerAnimation // io.github.mradzinski.holler/HollerAnimation.Companion.Drop.<get-Drop>|<get-Drop>(){}[0]
+        final val Fade // io.github.mradzinski.holler/HollerAnimation.Companion.Fade|{}Fade[0]
+            final fun <get-Fade>(): io.github.mradzinski.holler/HollerAnimation // io.github.mradzinski.holler/HollerAnimation.Companion.Fade.<get-Fade>|<get-Fade>(){}[0]
+        final val None // io.github.mradzinski.holler/HollerAnimation.Companion.None|{}None[0]
+            final fun <get-None>(): io.github.mradzinski.holler/HollerAnimation // io.github.mradzinski.holler/HollerAnimation.Companion.None.<get-None>|<get-None>(){}[0]
+        final val Pop // io.github.mradzinski.holler/HollerAnimation.Companion.Pop|{}Pop[0]
+            final fun <get-Pop>(): io.github.mradzinski.holler/HollerAnimation // io.github.mradzinski.holler/HollerAnimation.Companion.Pop.<get-Pop>|<get-Pop>(){}[0]
+        final val Rise // io.github.mradzinski.holler/HollerAnimation.Companion.Rise|{}Rise[0]
+            final fun <get-Rise>(): io.github.mradzinski.holler/HollerAnimation // io.github.mradzinski.holler/HollerAnimation.Companion.Rise.<get-Rise>|<get-Rise>(){}[0]
+        final val Scale // io.github.mradzinski.holler/HollerAnimation.Companion.Scale|{}Scale[0]
+            final fun <get-Scale>(): io.github.mradzinski.holler/HollerAnimation // io.github.mradzinski.holler/HollerAnimation.Companion.Scale.<get-Scale>|<get-Scale>(){}[0]
+        final val Slide // io.github.mradzinski.holler/HollerAnimation.Companion.Slide|{}Slide[0]
+            final fun <get-Slide>(): io.github.mradzinski.holler/HollerAnimation // io.github.mradzinski.holler/HollerAnimation.Companion.Slide.<get-Slide>|<get-Slide>(){}[0]
+    }
+}
+
+final class io.github.mradzinski.holler/Holler { // io.github.mradzinski.holler/Holler|null[0]
+    constructor <init>() // io.github.mradzinski.holler/Holler.<init>|<init>(){}[0]
+
+    final val messages // io.github.mradzinski.holler/Holler.messages|{}messages[0]
+        final fun <get-messages>(): kotlin.collections/List<io.github.mradzinski.holler/HollerHandle> // io.github.mradzinski.holler/Holler.messages.<get-messages>|<get-messages>(){}[0]
+
+    final fun dismiss(kotlin/Any) // io.github.mradzinski.holler/Holler.dismiss|dismiss(kotlin.Any){}[0]
+    final fun dismissAll() // io.github.mradzinski.holler/Holler.dismissAll|dismissAll(){}[0]
+    final fun show(kotlin/Any, kotlin/Any? = ...): io.github.mradzinski.holler/HollerHandle // io.github.mradzinski.holler/Holler.show|show(kotlin.Any;kotlin.Any?){}[0]
+    final fun show(kotlin/String, kotlin/String? = ..., io.github.mradzinski.holler/HollerDuration = ..., kotlin/Any? = ...): io.github.mradzinski.holler/HollerHandle // io.github.mradzinski.holler/Holler.show|show(kotlin.String;kotlin.String?;io.github.mradzinski.holler.HollerDuration;kotlin.Any?){}[0]
+}
+
+final class io.github.mradzinski.holler/HollerAnimationContext { // io.github.mradzinski.holler/HollerAnimationContext|null[0]
+    constructor <init>(androidx.compose.ui/Alignment, androidx.compose.ui.unit/LayoutDirection) // io.github.mradzinski.holler/HollerAnimationContext.<init>|<init>(androidx.compose.ui.Alignment;androidx.compose.ui.unit.LayoutDirection){}[0]
+
+    final val alignment // io.github.mradzinski.holler/HollerAnimationContext.alignment|{}alignment[0]
+        final fun <get-alignment>(): androidx.compose.ui/Alignment // io.github.mradzinski.holler/HollerAnimationContext.alignment.<get-alignment>|<get-alignment>(){}[0]
+    final val layoutDirection // io.github.mradzinski.holler/HollerAnimationContext.layoutDirection|{}layoutDirection[0]
+        final fun <get-layoutDirection>(): androidx.compose.ui.unit/LayoutDirection // io.github.mradzinski.holler/HollerAnimationContext.layoutDirection.<get-layoutDirection>|<get-layoutDirection>(){}[0]
+
+    final fun component1(): androidx.compose.ui/Alignment // io.github.mradzinski.holler/HollerAnimationContext.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.unit/LayoutDirection // io.github.mradzinski.holler/HollerAnimationContext.component2|component2(){}[0]
+    final fun copy(androidx.compose.ui/Alignment = ..., androidx.compose.ui.unit/LayoutDirection = ...): io.github.mradzinski.holler/HollerAnimationContext // io.github.mradzinski.holler/HollerAnimationContext.copy|copy(androidx.compose.ui.Alignment;androidx.compose.ui.unit.LayoutDirection){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.mradzinski.holler/HollerAnimationContext.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.mradzinski.holler/HollerAnimationContext.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.mradzinski.holler/HollerAnimationContext.toString|toString(){}[0]
+}
+
+final class io.github.mradzinski.holler/HollerColors { // io.github.mradzinski.holler/HollerColors|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color) // io.github.mradzinski.holler/HollerColors.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+
+    final val border // io.github.mradzinski.holler/HollerColors.border|{}border[0]
+        final fun <get-border>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.border.<get-border>|<get-border>(){}[0]
+    final val container // io.github.mradzinski.holler/HollerColors.container|{}container[0]
+        final fun <get-container>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.container.<get-container>|<get-container>(){}[0]
+    final val controls // io.github.mradzinski.holler/HollerColors.controls|{}controls[0]
+        final fun <get-controls>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.controls.<get-controls>|<get-controls>(){}[0]
+    final val countdown // io.github.mradzinski.holler/HollerColors.countdown|{}countdown[0]
+        final fun <get-countdown>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.countdown.<get-countdown>|<get-countdown>(){}[0]
+    final val details // io.github.mradzinski.holler/HollerColors.details|{}details[0]
+        final fun <get-details>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.details.<get-details>|<get-details>(){}[0]
+    final val footerContainer // io.github.mradzinski.holler/HollerColors.footerContainer|{}footerContainer[0]
+        final fun <get-footerContainer>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.footerContainer.<get-footerContainer>|<get-footerContainer>(){}[0]
+    final val progress // io.github.mradzinski.holler/HollerColors.progress|{}progress[0]
+        final fun <get-progress>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.progress.<get-progress>|<get-progress>(){}[0]
+    final val progressTrack // io.github.mradzinski.holler/HollerColors.progressTrack|{}progressTrack[0]
+        final fun <get-progressTrack>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.progressTrack.<get-progressTrack>|<get-progressTrack>(){}[0]
+    final val shadow // io.github.mradzinski.holler/HollerColors.shadow|{}shadow[0]
+        final fun <get-shadow>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.shadow.<get-shadow>|<get-shadow>(){}[0]
+    final val title // io.github.mradzinski.holler/HollerColors.title|{}title[0]
+        final fun <get-title>(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.title.<get-title>|<get-title>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component1|component1(){}[0]
+    final fun component10(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component10|component10(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component6|component6(){}[0]
+    final fun component7(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component7|component7(){}[0]
+    final fun component8(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component8|component8(){}[0]
+    final fun component9(): androidx.compose.ui.graphics/Color // io.github.mradzinski.holler/HollerColors.component9|component9(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...): io.github.mradzinski.holler/HollerColors // io.github.mradzinski.holler/HollerColors.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.mradzinski.holler/HollerColors.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.mradzinski.holler/HollerColors.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.mradzinski.holler/HollerColors.toString|toString(){}[0]
+}
+
+final class io.github.mradzinski.holler/HollerStyle { // io.github.mradzinski.holler/HollerStyle|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Shape, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.text/TextStyle, androidx.compose.ui.text/TextStyle, androidx.compose.ui.text/TextStyle, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/DpOffset, androidx.compose.ui.unit/Dp) // io.github.mradzinski.holler/HollerStyle.<init>|<init>(androidx.compose.ui.graphics.Shape;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.text.TextStyle;androidx.compose.ui.text.TextStyle;androidx.compose.ui.text.TextStyle;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.DpOffset;androidx.compose.ui.unit.Dp){}[0]
+
+    final val countdownTextStyle // io.github.mradzinski.holler/HollerStyle.countdownTextStyle|{}countdownTextStyle[0]
+        final fun <get-countdownTextStyle>(): androidx.compose.ui.text/TextStyle // io.github.mradzinski.holler/HollerStyle.countdownTextStyle.<get-countdownTextStyle>|<get-countdownTextStyle>(){}[0]
+    final val detailsTextStyle // io.github.mradzinski.holler/HollerStyle.detailsTextStyle|{}detailsTextStyle[0]
+        final fun <get-detailsTextStyle>(): androidx.compose.ui.text/TextStyle // io.github.mradzinski.holler/HollerStyle.detailsTextStyle.<get-detailsTextStyle>|<get-detailsTextStyle>(){}[0]
+    final val iconSize // io.github.mradzinski.holler/HollerStyle.iconSize|{}iconSize[0]
+        final fun <get-iconSize>(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.iconSize.<get-iconSize>|<get-iconSize>(){}[0]
+    final val maxWidth // io.github.mradzinski.holler/HollerStyle.maxWidth|{}maxWidth[0]
+        final fun <get-maxWidth>(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.maxWidth.<get-maxWidth>|<get-maxWidth>(){}[0]
+    final val progressBarHeight // io.github.mradzinski.holler/HollerStyle.progressBarHeight|{}progressBarHeight[0]
+        final fun <get-progressBarHeight>(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.progressBarHeight.<get-progressBarHeight>|<get-progressBarHeight>(){}[0]
+    final val shadowOffset // io.github.mradzinski.holler/HollerStyle.shadowOffset|{}shadowOffset[0]
+        final fun <get-shadowOffset>(): androidx.compose.ui.unit/DpOffset // io.github.mradzinski.holler/HollerStyle.shadowOffset.<get-shadowOffset>|<get-shadowOffset>(){}[0]
+    final val shadowRadius // io.github.mradzinski.holler/HollerStyle.shadowRadius|{}shadowRadius[0]
+        final fun <get-shadowRadius>(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.shadowRadius.<get-shadowRadius>|<get-shadowRadius>(){}[0]
+    final val shadowSpread // io.github.mradzinski.holler/HollerStyle.shadowSpread|{}shadowSpread[0]
+        final fun <get-shadowSpread>(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.shadowSpread.<get-shadowSpread>|<get-shadowSpread>(){}[0]
+    final val shape // io.github.mradzinski.holler/HollerStyle.shape|{}shape[0]
+        final fun <get-shape>(): androidx.compose.ui.graphics/Shape // io.github.mradzinski.holler/HollerStyle.shape.<get-shape>|<get-shape>(){}[0]
+    final val titleTextStyle // io.github.mradzinski.holler/HollerStyle.titleTextStyle|{}titleTextStyle[0]
+        final fun <get-titleTextStyle>(): androidx.compose.ui.text/TextStyle // io.github.mradzinski.holler/HollerStyle.titleTextStyle.<get-titleTextStyle>|<get-titleTextStyle>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Shape // io.github.mradzinski.holler/HollerStyle.component1|component1(){}[0]
+    final fun component10(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.component10|component10(){}[0]
+    final fun component2(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.text/TextStyle // io.github.mradzinski.holler/HollerStyle.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.text/TextStyle // io.github.mradzinski.holler/HollerStyle.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.text/TextStyle // io.github.mradzinski.holler/HollerStyle.component6|component6(){}[0]
+    final fun component7(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.component7|component7(){}[0]
+    final fun component8(): androidx.compose.ui.unit/Dp // io.github.mradzinski.holler/HollerStyle.component8|component8(){}[0]
+    final fun component9(): androidx.compose.ui.unit/DpOffset // io.github.mradzinski.holler/HollerStyle.component9|component9(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Shape = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.text/TextStyle = ..., androidx.compose.ui.text/TextStyle = ..., androidx.compose.ui.text/TextStyle = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/Dp = ..., androidx.compose.ui.unit/DpOffset = ..., androidx.compose.ui.unit/Dp = ...): io.github.mradzinski.holler/HollerStyle // io.github.mradzinski.holler/HollerStyle.copy|copy(androidx.compose.ui.graphics.Shape;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.text.TextStyle;androidx.compose.ui.text.TextStyle;androidx.compose.ui.text.TextStyle;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.DpOffset;androidx.compose.ui.unit.Dp){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.mradzinski.holler/HollerStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.mradzinski.holler/HollerStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.mradzinski.holler/HollerStyle.toString|toString(){}[0]
+}
+
+sealed class io.github.mradzinski.holler/HollerDuration { // io.github.mradzinski.holler/HollerDuration|null[0]
+    final class Custom : io.github.mradzinski.holler/HollerDuration { // io.github.mradzinski.holler/HollerDuration.Custom|null[0]
+        constructor <init>(kotlin.time/Duration) // io.github.mradzinski.holler/HollerDuration.Custom.<init>|<init>(kotlin.time.Duration){}[0]
+
+        final fun copy(kotlin.time/Duration = ...): io.github.mradzinski.holler/HollerDuration.Custom // io.github.mradzinski.holler/HollerDuration.Custom.copy|copy(kotlin.time.Duration){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // io.github.mradzinski.holler/HollerDuration.Custom.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // io.github.mradzinski.holler/HollerDuration.Custom.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // io.github.mradzinski.holler/HollerDuration.Custom.toString|toString(){}[0]
+    }
+
+    final object Infinite : io.github.mradzinski.holler/HollerDuration { // io.github.mradzinski.holler/HollerDuration.Infinite|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // io.github.mradzinski.holler/HollerDuration.Infinite.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // io.github.mradzinski.holler/HollerDuration.Infinite.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // io.github.mradzinski.holler/HollerDuration.Infinite.toString|toString(){}[0]
+    }
+
+    final object Long : io.github.mradzinski.holler/HollerDuration { // io.github.mradzinski.holler/HollerDuration.Long|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // io.github.mradzinski.holler/HollerDuration.Long.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // io.github.mradzinski.holler/HollerDuration.Long.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // io.github.mradzinski.holler/HollerDuration.Long.toString|toString(){}[0]
+    }
+
+    final object Short : io.github.mradzinski.holler/HollerDuration { // io.github.mradzinski.holler/HollerDuration.Short|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // io.github.mradzinski.holler/HollerDuration.Short.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // io.github.mradzinski.holler/HollerDuration.Short.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // io.github.mradzinski.holler/HollerDuration.Short.toString|toString(){}[0]
+    }
+}
+
+final object io.github.mradzinski.holler/HollerDefaults { // io.github.mradzinski.holler/HollerDefaults|null[0]
+    final fun CloseIcon(androidx.compose.ui/Modifier?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // io.github.mradzinski.holler/HollerDefaults.CloseIcon|CloseIcon(androidx.compose.ui.Modifier?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    final fun ExpandIcon(kotlin/Boolean, androidx.compose.ui/Modifier?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // io.github.mradzinski.holler/HollerDefaults.ExpandIcon|ExpandIcon(kotlin.Boolean;androidx.compose.ui.Modifier?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    final fun colors(androidx.compose.material3/ColorScheme): io.github.mradzinski.holler/HollerColors // io.github.mradzinski.holler/HollerDefaults.colors|colors(androidx.compose.material3.ColorScheme){}[0]
+    final fun colors(androidx.compose.runtime/Composer?, kotlin/Int): io.github.mradzinski.holler/HollerColors // io.github.mradzinski.holler/HollerDefaults.colors|colors(androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+    final fun maxVisible(io.github.mradzinski.holler/HollerStackingStyle): kotlin/Int // io.github.mradzinski.holler/HollerDefaults.maxVisible|maxVisible(io.github.mradzinski.holler.HollerStackingStyle){}[0]
+    final fun style(androidx.compose.ui.graphics/Shape?, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.text/TextStyle?, androidx.compose.ui.text/TextStyle?, androidx.compose.ui.text/TextStyle?, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/Dp, androidx.compose.ui.unit/DpOffset, androidx.compose.ui.unit/Dp, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int): io.github.mradzinski.holler/HollerStyle // io.github.mradzinski.holler/HollerDefaults.style|style(androidx.compose.ui.graphics.Shape?;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.text.TextStyle?;androidx.compose.ui.text.TextStyle?;androidx.compose.ui.text.TextStyle?;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.Dp;androidx.compose.ui.unit.DpOffset;androidx.compose.ui.unit.Dp;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+}
+
+final val io.github.mradzinski.holler/LocalHollerColors // io.github.mradzinski.holler/LocalHollerColors|{}LocalHollerColors[0]
+    final fun <get-LocalHollerColors>(): androidx.compose.runtime/CompositionLocal<io.github.mradzinski.holler/HollerColors> // io.github.mradzinski.holler/LocalHollerColors.<get-LocalHollerColors>|<get-LocalHollerColors>(){}[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_Holler$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_Holler$stableprop|#static{}io_github_mradzinski_holler_Holler$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerAnimation$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerAnimation$stableprop|#static{}io_github_mradzinski_holler_HollerAnimation$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerAnimationContext$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerAnimationContext$stableprop|#static{}io_github_mradzinski_holler_HollerAnimationContext$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerColors$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerColors$stableprop|#static{}io_github_mradzinski_holler_HollerColors$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDefaults$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDefaults$stableprop|#static{}io_github_mradzinski_holler_HollerDefaults$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration$stableprop|#static{}io_github_mradzinski_holler_HollerDuration$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Custom$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Custom$stableprop|#static{}io_github_mradzinski_holler_HollerDuration_Custom$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Infinite$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Infinite$stableprop|#static{}io_github_mradzinski_holler_HollerDuration_Infinite$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Long$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Long$stableprop|#static{}io_github_mradzinski_holler_HollerDuration_Long$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Short$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Short$stableprop|#static{}io_github_mradzinski_holler_HollerDuration_Short$stableprop[0]
+final val io.github.mradzinski.holler/io_github_mradzinski_holler_HollerStyle$stableprop // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerStyle$stableprop|#static{}io_github_mradzinski_holler_HollerStyle$stableprop[0]
+
+final fun (io.github.mradzinski.holler/HollerHostScope).io.github.mradzinski.holler/HollerMessage(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<io.github.mradzinski.holler/HollerActionsScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<kotlin.time/Duration, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, io.github.mradzinski.holler/HollerActionsPosition?, io.github.mradzinski.holler/HollerActionsVisibility?, io.github.mradzinski.holler/HollerClosePosition?, kotlin/Boolean, io.github.mradzinski.holler/HollerStopTrigger?, io.github.mradzinski.holler/HollerDuration?, kotlin/Boolean, io.github.mradzinski.holler/HollerColors?, io.github.mradzinski.holler/HollerStyle?, io.github.mradzinski.holler/HollerAnimation?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // io.github.mradzinski.holler/HollerMessage|HollerMessage@io.github.mradzinski.holler.HollerHostScope(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<io.github.mradzinski.holler.HollerActionsScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<kotlin.time.Duration,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;io.github.mradzinski.holler.HollerActionsPosition?;io.github.mradzinski.holler.HollerActionsVisibility?;io.github.mradzinski.holler.HollerClosePosition?;kotlin.Boolean;io.github.mradzinski.holler.HollerStopTrigger?;io.github.mradzinski.holler.HollerDuration?;kotlin.Boolean;io.github.mradzinski.holler.HollerColors?;io.github.mradzinski.holler.HollerStyle?;io.github.mradzinski.holler.HollerAnimation?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun (io.github.mradzinski.holler/HollerHostScope).io.github.mradzinski.holler/HollerMessage(kotlin/String, androidx.compose.ui/Modifier?, kotlin/String?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<io.github.mradzinski.holler/HollerActionsScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<kotlin.time/Duration, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, io.github.mradzinski.holler/HollerActionsPosition?, io.github.mradzinski.holler/HollerActionsVisibility?, io.github.mradzinski.holler/HollerClosePosition?, kotlin/Boolean, io.github.mradzinski.holler/HollerStopTrigger?, io.github.mradzinski.holler/HollerDuration?, kotlin/Boolean, io.github.mradzinski.holler/HollerColors?, io.github.mradzinski.holler/HollerStyle?, io.github.mradzinski.holler/HollerAnimation?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // io.github.mradzinski.holler/HollerMessage|HollerMessage@io.github.mradzinski.holler.HollerHostScope(kotlin.String;androidx.compose.ui.Modifier?;kotlin.String?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<io.github.mradzinski.holler.HollerActionsScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<kotlin.time.Duration,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;io.github.mradzinski.holler.HollerActionsPosition?;io.github.mradzinski.holler.HollerActionsVisibility?;io.github.mradzinski.holler.HollerClosePosition?;kotlin.Boolean;io.github.mradzinski.holler.HollerStopTrigger?;io.github.mradzinski.holler.HollerDuration?;kotlin.Boolean;io.github.mradzinski.holler.HollerColors?;io.github.mradzinski.holler.HollerStyle?;io.github.mradzinski.holler.HollerAnimation?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun io.github.mradzinski.holler/HollerAnimation(androidx.compose.animation/EnterTransition, androidx.compose.animation/ExitTransition, androidx.compose.animation/EnterTransition = ..., androidx.compose.animation/ExitTransition = ...): io.github.mradzinski.holler/HollerAnimation // io.github.mradzinski.holler/HollerAnimation|HollerAnimation(androidx.compose.animation.EnterTransition;androidx.compose.animation.ExitTransition;androidx.compose.animation.EnterTransition;androidx.compose.animation.ExitTransition){}[0]
+final fun io.github.mradzinski.holler/HollerHost(io.github.mradzinski.holler/Holler, kotlin/String, kotlin/String, kotlin/String, androidx.compose.ui/Modifier?, androidx.compose.ui/Alignment?, io.github.mradzinski.holler/HollerStackingStyle?, kotlin/Int, androidx.compose.foundation.layout/PaddingValues?, androidx.compose.ui.unit/Dp, io.github.mradzinski.holler/HollerColors?, io.github.mradzinski.holler/HollerStyle?, io.github.mradzinski.holler/HollerAnimation?, kotlin/Boolean, kotlin/Function3<kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function4<io.github.mradzinski.holler/HollerHostScope, kotlin/Any, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int, kotlin/Int) // io.github.mradzinski.holler/HollerHost|HollerHost(io.github.mradzinski.holler.Holler;kotlin.String;kotlin.String;kotlin.String;androidx.compose.ui.Modifier?;androidx.compose.ui.Alignment?;io.github.mradzinski.holler.HollerStackingStyle?;kotlin.Int;androidx.compose.foundation.layout.PaddingValues?;androidx.compose.ui.unit.Dp;io.github.mradzinski.holler.HollerColors?;io.github.mradzinski.holler.HollerStyle?;io.github.mradzinski.holler.HollerAnimation?;kotlin.Boolean;kotlin.Function3<kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function4<io.github.mradzinski.holler.HollerHostScope,kotlin.Any,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun io.github.mradzinski.holler/HollerIconRing(androidx.compose.ui/Modifier?, androidx.compose.ui.graphics/Color, androidx.compose.ui.unit/Dp, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // io.github.mradzinski.holler/HollerIconRing|HollerIconRing(androidx.compose.ui.Modifier?;androidx.compose.ui.graphics.Color;androidx.compose.ui.unit.Dp;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_Holler$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_Holler$stableprop_getter|io_github_mradzinski_holler_Holler$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerAnimation$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerAnimation$stableprop_getter|io_github_mradzinski_holler_HollerAnimation$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerAnimationContext$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerAnimationContext$stableprop_getter|io_github_mradzinski_holler_HollerAnimationContext$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerColors$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerColors$stableprop_getter|io_github_mradzinski_holler_HollerColors$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDefaults$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDefaults$stableprop_getter|io_github_mradzinski_holler_HollerDefaults$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration$stableprop_getter|io_github_mradzinski_holler_HollerDuration$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Custom$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Custom$stableprop_getter|io_github_mradzinski_holler_HollerDuration_Custom$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Infinite$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Infinite$stableprop_getter|io_github_mradzinski_holler_HollerDuration_Infinite$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Long$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Long$stableprop_getter|io_github_mradzinski_holler_HollerDuration_Long$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Short$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerDuration_Short$stableprop_getter|io_github_mradzinski_holler_HollerDuration_Short$stableprop_getter(){}[0]
+final fun io.github.mradzinski.holler/io_github_mradzinski_holler_HollerStyle$stableprop_getter(): kotlin/Int // io.github.mradzinski.holler/io_github_mradzinski_holler_HollerStyle$stableprop_getter|io_github_mradzinski_holler_HollerStyle$stableprop_getter(){}[0]

@@ -135,8 +135,9 @@ jobs:
 
       # The project's own settings ask for 4 GB for Gradle and 3 GB for the Kotlin compiler, which is all the
       # memory this runner has (7 GB), with nothing left for the simulator. Settings in the user's Gradle
-      # folder win over the project's. This job compiles almost only for iOS, which Gradle does itself, so
-      # Gradle keeps its 4 GB and the Kotlin compiler gets less.
+      # folder win over the project's. This job compiles mostly for iOS, which Gradle does itself, so Gradle
+      # keeps its 4 GB and the Kotlin compiler gets less; the library is small enough for the API check's
+      # desktop and web compilations to fit in that.
       - name: Fit Gradle's memory to the runner
         run: |
           mkdir -p ~/.gradle
@@ -157,9 +158,10 @@ jobs:
           restore-keys: konan-${{ runner.os }}-
 
       # The library's tests on the iOS simulator, and the library compiled for the two other iOS targets, a
-      # device and an Intel simulator.
-      - name: Test on the iOS simulator
-        run: ./gradlew :holler:iosSimulatorArm64Test :holler:compileKotlinIosArm64 :holler:compileKotlinIosX64
+      # device and an Intel simulator. The public API is compared with the one recorded in `holler/api/`
+      # here, because only a Mac can build every target the record covers.
+      - name: Test on the iOS simulator and check the public API
+        run: ./gradlew :holler:iosSimulatorArm64Test :holler:compileKotlinIosArm64 :holler:compileKotlinIosX64 :holler:checkKotlinAbi
 
       - name: Keep the test reports of a failed run
         if: failure()

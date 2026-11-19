@@ -1,6 +1,7 @@
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -20,6 +21,19 @@ roborazzi {
 
 kotlin {
     explicitApi()
+
+    // The library's public API is recorded in `holler/api/`, and `checkKotlinAbi` (part of `check`) fails
+    // when the code no longer matches it, so the API cannot change by accident. After a change that is meant:
+    // `./gradlew :holler:updateKotlinAbi`, then review the difference in those files like any other code.
+    // The Kotlin plugin marks this feature as experimental; it is build tooling, not part of the library.
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation {
+        enabled.set(true)
+
+        // Holders the Compose compiler generates for lambdas. Their members are named after a hash of the
+        // code, so they change with edits that leave the API alone.
+        filters { exclude { byNames.add("io.github.mradzinski.holler.ComposableSingletons**") } }
+    }
 
     // The tests use one `expect` class, the base class that carries Android's test runner. Kotlin marks
     // such classes as Beta and warns on every build; this says the use is deliberate. The library itself has none.
