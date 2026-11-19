@@ -142,13 +142,16 @@ jobs:
           kotlin.daemon.jvmargs=-Xmx1536m
           PROPERTIES
 
-      # Kotlin/Native downloads its compiler and the iOS platform libraries here on first use. Keeping the
-      # folder between runs saves that download; it only changes when the versions do.
+      # Kotlin/Native downloads its compiler and the iOS platform libraries here on first use, and
+      # precompiles every dependency for iOS, which takes a quarter of an hour. Keeping the folder between
+      # runs saves that. When the versions file changed there is no exact match, so the job falls back to
+      # the latest folder saved before: Kotlin/Native reuses what still applies and redoes only the rest.
       - name: Keep the Kotlin/Native toolchain between runs
         uses: actions/cache@v6
         with:
           path: ~/.konan
           key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: konan-${{ runner.os }}-
 
       # The library's tests on the iOS simulator, and the library compiled for the two other iOS targets, a
       # device and an Intel simulator.
