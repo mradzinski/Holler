@@ -14,6 +14,9 @@ on:
     paths-ignore: ['**.md', 'docs/**', 'LICENSE', 'NOTICE']
   pull_request:
     paths-ignore: ['**.md', 'docs/**', 'LICENSE', 'NOTICE']
+  # By hand, from the Actions tab. The publish workflow only uploads a commit this workflow passed for, and a
+  # commit that changed nothing but documentation never started it.
+  workflow_dispatch:
 
 # A newer push to the same branch makes the run of the older one pointless.
 concurrency:

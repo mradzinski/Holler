@@ -1,8 +1,10 @@
 # Uploads the library to Maven Central. It never runs by itself: someone starts it by hand from the
 # Actions tab ("Run workflow") and types the version to publish, which must be the one in gradle.properties.
 #
-# `./gradlew publishLibrary` first runs every test of the library on every platform, lint, the coverage limit
-# and the comparison of the Android screenshots. If anything fails, nothing is uploaded.
+# It does not run the tests again. It uploads only a commit the build workflow has already passed for (lint,
+# the tests on every platform, the coverage limit), and refuses any other. A commit that changed only
+# documentation never started the build workflow: start "build" by hand for it first, then this one. The one
+# check made here is the comparison of the Android screenshots, which the build workflow does not make.
 #
 # The upload is staged, not public. To make it public, open https://central.sonatype.com/publishing/deployments
 # and press "Publish" on the deployment; "Drop" throws it away. After a successful upload this workflow tags
@@ -28,16 +30,18 @@ concurrency:
   cancel-in-progress: false
 
 # Writing is needed for one thing: pushing the tag of the version that was uploaded.
+# Reading actions is needed to ask whether the build workflow passed for the commit.
 permissions:
   contents: write
+  actions: read
 
 jobs:
   publish:
     # A release is cut from main only.
     if: github.ref == 'refs/heads/main'
-    # macOS, because the iOS artifacts and tests need Xcode. It also has Chrome, for the browser tests.
+    # macOS, because building the iOS artifacts needs Xcode.
     runs-on: macos-latest
-    timeout-minutes: 120
+    timeout-minutes: 60
 
     steps:
       - name: Check out the code
@@ -61,6 +65,27 @@ jobs:
             exit 1
           fi
 
+      # The tests are not run here, so a commit is uploaded only if the build workflow ran them and passed.
+      # Runs of pull requests do not count: they test a merge, not this commit.
+      - name: Check that the build workflow passed for this commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          passed=$(gh run list \
+            --repo "$GITHUB_REPOSITORY" \
+            --workflow build.yml \
+            --branch main \
+            --commit "$GITHUB_SHA" \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq 'length')
+
+          if [ "$passed" != "1" ]; then
+            echo "::error::The build workflow has not passed for $GITHUB_SHA. It is still running, it failed, or the commit changed only documentation and never started it: in that case start \"build\" by hand on main, wait for it, and run this again."
+            exit 1
+          fi
+
       # The same Java release the project is built with locally.
       - name: Set up Java
         uses: actions/setup-java@v6
@@ -72,8 +97,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
 
       # The project's own settings ask for 4 GB for Gradle and 3 GB for the Kotlin compiler, which is all the
-      # memory this runner has (7 GB), with nothing left for the tests, the simulator and Chrome. Settings in
-      # the user's Gradle folder win over the project's. Two workers at a time keep the tests from piling up.
+      # memory this runner has (7 GB). Settings in the user's Gradle folder win over the project's. Two workers
+      # at a time keep the compilations from piling up.
       - name: Fit Gradle's memory to the runner
         run: |
           mkdir -p ~/.gradle
@@ -83,13 +108,23 @@ jobs:
           org.gradle.workers.max=2
           PROPERTIES
 
-      - name: Test everything, then upload to Maven Central
+      # Kotlin/Native downloads its compiler and precompiles every dependency for iOS on first use, which
+      # takes a quarter of an hour. The build workflow's iOS job saves that folder; it is read here, never
+      # saved, so a publish cannot replace what the build workflow relies on.
+      - name: Reuse the Kotlin/Native toolchain of the build workflow
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: konan-${{ runner.os }}-
+
+      - name: Compare the screenshots, then upload to Maven Central
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
-        run: ./gradlew publishLibrary
+        run: ./gradlew uploadLibrary
 
       # Marks the commit this version was built from, so the published files can be traced back to it.
       - name: Tag the commit that was uploaded
@@ -99,12 +134,12 @@ jobs:
           git tag "v$VERSION"
           git push origin "v$VERSION"
 
-      # When a test fails, its report says which one and why.
-      - name: Keep the test reports of a failed run
+      # When a screenshot differs, these show which one and how.
+      - name: Keep the screenshot comparison of a failed run
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: test-reports
+          name: screenshot-comparison
           path: |
             **/build/reports/tests/
             holler/build/outputs/roborazzi/

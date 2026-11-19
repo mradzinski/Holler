@@ -59,7 +59,12 @@ subprojects {
 // The upload is staged: Central checks it and keeps it out of public view until someone presses "Publish" for
 // that deployment on https://central.sonatype.com/publishing/deployments (or "Drop" to throw it away). A
 // version on Maven Central can never be replaced, so the last step is a person's.
-val publishRequested = gradle.startParameter.taskNames.any { it.substringAfterLast(':') == "publishLibrary" }
+//
+// `uploadLibrary` is the same upload for a commit whose checks have already passed somewhere else: it only
+// compares the screenshots. The publish workflow uses it, after confirming that the build workflow passed for
+// the commit, so the tests are not run a second time. By hand, use `publishLibrary`.
+val publishTasks = setOf("publishLibrary", "uploadLibrary")
+val publishRequested = gradle.startParameter.taskNames.any { it.substringAfterLast(':') in publishTasks }
 
 // What must pass before the library is published:
 //  - `check` of the library: its tests on every platform (desktop, Android, iOS simulator, Wasm and JS in
@@ -94,5 +99,12 @@ tasks.register("publishLibrary") {
     group = "publishing"
     description = "Runs every check, then uploads the library to Maven Central, where it waits to be published by hand."
     dependsOn(checksBeforePublishing)
+    dependsOn(":holler:publishToMavenCentral")
+}
+
+tasks.register("uploadLibrary") {
+    group = "publishing"
+    description = "Compares the screenshots, then uploads the library to Maven Central. For a commit already checked."
+    dependsOn(":holler:verifyRoborazziAndroidHostTest")
     dependsOn(":holler:publishToMavenCentral")
 }
