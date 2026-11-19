@@ -1,8 +1,12 @@
-# Publishes the library to Maven Central. It never runs by itself: someone starts it by hand from the
+# Uploads the library to Maven Central. It never runs by itself: someone starts it by hand from the
 # Actions tab ("Run workflow") and types the version to publish, which must be the one in gradle.properties.
 #
 # `./gradlew publishLibrary` first runs every test of the library on every platform, lint, the coverage limit
-# and the comparison of the Android screenshots. If anything fails, nothing is published.
+# and the comparison of the Android screenshots. If anything fails, nothing is uploaded.
+#
+# The upload is staged, not public. To make it public, open https://central.sonatype.com/publishing/deployments
+# and press "Publish" on the deployment; "Drop" throws it away. After a successful upload this workflow tags
+# the commit `v<version>`; if the deployment is dropped, delete that tag.
 #
 # Secrets it needs (repository Settings > Secrets and variables > Actions):
 #   MAVEN_CENTRAL_USERNAME, MAVEN_CENTRAL_PASSWORD  the user token of the Central Portal, not the login
@@ -23,8 +27,9 @@ concurrency:
   group: publish
   cancel-in-progress: false
 
+# Writing is needed for one thing: pushing the tag of the version that was uploaded.
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   publish:
@@ -50,6 +55,12 @@ jobs:
             exit 1
           fi
 
+          # A tag for this version means it was uploaded before. Stop here, before anything is built.
+          if git ls-remote --exit-code --tags origin "refs/tags/v$TYPED_VERSION" > /dev/null; then
+            echo "::error::The tag v$TYPED_VERSION already exists: this version was uploaded before."
+            exit 1
+          fi
+
       # The same Java release the project is built with locally.
       - name: Set up Java
         uses: actions/setup-java@v6
@@ -72,13 +83,21 @@ jobs:
           org.gradle.workers.max=2
           PROPERTIES
 
-      - name: Test everything, then publish and release
+      - name: Test everything, then upload to Maven Central
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: ./gradlew publishLibrary
+
+      # Marks the commit this version was built from, so the published files can be traced back to it.
+      - name: Tag the commit that was uploaded
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
 
       # When a test fails, its report says which one and why.
       - name: Keep the test reports of a failed run

@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.maven.publish) apply false
+    alias(libs.plugins.dokka) apply false
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.kover) apply false
     alias(libs.plugins.roborazzi) apply false
@@ -51,9 +52,13 @@ subprojects {
     }
 }
 
-// One command to publish the library to Maven Central: ./gradlew publishLibrary
+// One command to upload the library to Maven Central: ./gradlew publishLibrary
 // It refuses to start, with a clear message, when the one-time setup (Central Portal token, signing key) is
-// incomplete. It publishes only after everything below has passed, so a failing test stops it.
+// incomplete. It uploads only after everything below has passed, so a failing test stops it.
+//
+// The upload is staged: Central checks it and keeps it out of public view until someone presses "Publish" for
+// that deployment on https://central.sonatype.com/publishing/deployments (or "Drop" to throw it away). A
+// version on Maven Central can never be replaced, so the last step is a person's.
 val publishRequested = gradle.startParameter.taskNames.any { it.substringAfterLast(':') == "publishLibrary" }
 
 // What must pass before the library is published:
@@ -87,7 +92,7 @@ if (publishRequested) {
 
 tasks.register("publishLibrary") {
     group = "publishing"
-    description = "Runs every test, compares the Android screenshots, then publishes the library to Maven Central and releases it."
+    description = "Runs every check, then uploads the library to Maven Central, where it waits to be published by hand."
     dependsOn(checksBeforePublishing)
-    dependsOn(":holler:publishAndReleaseToMavenCentral")
+    dependsOn(":holler:publishToMavenCentral")
 }
