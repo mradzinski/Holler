@@ -3,6 +3,8 @@ package io.github.mradzinski.holler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.click
@@ -10,14 +12,30 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
+import io.kotest.assertions.withClue
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.ints.shouldBeLessThan
 import io.kotest.matchers.shouldBe
+import kotlin.math.roundToInt
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
 /** The key the tests give the message they replace. */
 private const val TEST_KEY: String = "upload"
+
+/** A moment at which the default enter animation is still running, in milliseconds. */
+private const val MID_ENTER_MILLIS: Long = 64L
+
+/** Width of a card at its full size in these tests, in pixels: the default maximum width. */
+private const val FULL_WIDTH: Int = 375
+
+/**
+ * A message the app draws itself, in the replace tests.
+ *
+ * @param stage which of its two looks the message has.
+ */
+private data class Upload(val stage: String)
 
 /** Tests of replacing and closing a message by its key while a host draws it. */
 @OptIn(ExperimentalTestApi::class)
@@ -49,6 +67,52 @@ class HollerReplaceUiTest : UiTest() {
         onNodeWithText("Uploaded").assertExists()
         visibility.shouldHaveEntered()
         reasons shouldBe listOf(HollerDismissReason.Replaced)
+    }
+
+    @Test
+    fun `a message replaced while it enters by a value drawn elsewhere shows at once`() = runComposeUiTest {
+        val state = Holler()
+        var width = 0
+
+        mainClock.autoAdvance = false
+        setContent {
+            Box(Modifier.fillMaxSize()) {
+                HollerHost(
+                    holler = state,
+                    closeContentDescription = CLOSE_DESCRIPTION,
+                    expandContentDescription = EXPAND_DESCRIPTION,
+                    collapseContentDescription = COLLAPSE_DESCRIPTION,
+                ) { value ->
+                    val measured = Modifier.onGloballyPositioned { width = it.boundsInRoot().width.roundToInt() }
+
+                    // Two calls, as an app's `when` over its message types makes: each is its own card.
+                    if ((value as Upload).stage == "uploading") {
+                        HollerMessage(title = "Uploading", modifier = measured, duration = HollerDuration.Infinite)
+                    } else {
+                        HollerMessage(title = "Uploaded", modifier = measured, duration = HollerDuration.Infinite)
+                    }
+                }
+            }
+        }
+        state.show(value = Upload("uploading"), key = TEST_KEY)
+        advanceTimeBy(MID_ENTER_MILLIS)
+
+        withClue("the first card must still be growing") {
+            width shouldBeLessThan FULL_WIDTH
+        }
+
+        state.show(value = Upload("uploaded"), key = TEST_KEY)
+        advanceTimeByFrame()
+        advanceTimeByFrame()
+
+        onNodeWithText("Uploaded").assertExists()
+        withClue("the card that took over must not start growing again") {
+            width shouldBe FULL_WIDTH
+        }
+        state.entries
+            .single()
+            .visibility
+            .shouldHaveEntered()
     }
 
     @Test

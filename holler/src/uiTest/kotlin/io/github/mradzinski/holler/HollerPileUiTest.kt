@@ -14,6 +14,7 @@ import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
@@ -46,6 +47,15 @@ private const val FOLLOWING_SHARE: Float = 0.985f
 
 /** How long the tests give the pile to finish moving, in milliseconds. */
 private const val PILE_SETTLE_MILLIS: Long = 1_000L
+
+/** Half the time a pile takes to move, in milliseconds: a moment at which a moving height is on its way. */
+private const val PILE_HALFWAY_MILLIS: Long = 100L
+
+/** The name of a message whose title takes two lines, so its card is taller than the others. */
+private const val TALL: String = "Tall\nmessage"
+
+/** The name of a message whose title takes three lines, so its card is taller still. */
+private const val TALLER: String = "Taller\nmessage\nstill"
 
 /**
  * A message of the pile tests.
@@ -185,6 +195,224 @@ class HollerPileUiTest : UiTest() {
     }
 
     @Test
+    fun `a message that comes back from under the pile goes on with the time it had left`() = runComposeUiTest {
+        val holler = Holler()
+
+        host(holler, maxVisible = 1)
+        show(holler, "First")
+        advanceTimeBy(1_200)
+
+        onNodeWithText("First left:3").assertExists()
+
+        show(holler, "Second", "Third")
+
+        withClue("the first message must be too far under the pile to be drawn") {
+            isDrawn("First").shouldBeFalse()
+        }
+
+        frontCloseButton().performClick()
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+        frontCloseButton().performClick()
+        advanceTimeBy(300)
+
+        onNodeWithText("First left:3").assertExists()
+    }
+
+    @Test
+    fun `a message that comes back from under the pile is still expanded and its timer still stopped`() = runComposeUiTest {
+        val holler = Holler()
+
+        host(holler, maxVisible = 1, withDetails = true)
+        show(holler, "First")
+        onNode(hasContentDescription(EXPAND_DESCRIPTION) and !isHidden()).performTouchInput { click() }
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+        show(holler, "Second", "Third")
+
+        withClue("the first message must be too far under the pile to be drawn") {
+            isDrawn("First").shouldBeFalse()
+        }
+
+        frontCloseButton().performClick()
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+        frontCloseButton().performClick()
+        advanceTimeBy(PAST_SHORT_DURATION)
+
+        onNodeWithText("First").assertExists()
+        onNode(hasContentDescription(COLLAPSE_DESCRIPTION) and !isHidden()).assertExists()
+    }
+
+    @Test
+    fun `the cards behind move to the height of a message that arrives in front`() = runComposeUiTest {
+        val holler = Holler()
+
+        host(holler)
+        show(holler, "Short")
+
+        val shortHeight = height("Short")
+
+        holler.show(PileMessage(TALL))
+        advanceTimeByFrame()
+        advanceTimeBy(PILE_HALFWAY_MILLIS)
+
+        val tallHeight = height(TALL)
+
+        withClue("the card behind must be on its way to the height of the new front card") {
+            height("Short") shouldBeGreaterThan shortHeight
+            height("Short") shouldBeLessThan tallHeight
+        }
+
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+
+        height("Short") shouldBe tallHeight
+    }
+
+    @Test
+    fun `a card that comes forward moves from the height it was held at to its own`() = runComposeUiTest {
+        val holler = Holler()
+
+        host(holler)
+        show(holler, TALL)
+
+        val tallHeight = height(TALL)
+
+        show(holler, "Short")
+
+        val shortHeight = height("Short")
+
+        height(TALL) shouldBe shortHeight
+
+        frontCloseButton().performClick()
+        advanceTimeBy(PILE_HALFWAY_MILLIS)
+
+        withClue("the card that came forward must be on its way to its own height") {
+            height(TALL) shouldBeGreaterThan shortHeight
+            height(TALL) shouldBeLessThan tallHeight
+        }
+
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+
+        height(TALL) shouldBe tallHeight
+    }
+
+    @Test
+    fun `a card that comes forward without ever having been in front takes its own height at once`() = runComposeUiTest {
+        val holler = Holler()
+
+        host(holler)
+        // Shown together, so the tall message is behind the short one from the start.
+        holler.show(PileMessage(TALL))
+        holler.show(PileMessage("Short"))
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+
+        val shortHeight = height("Short")
+
+        height(TALL) shouldBe shortHeight
+
+        frontCloseButton().performClick()
+        advanceTimeByFrame()
+        advanceTimeByFrame()
+
+        height(TALL) shouldBeGreaterThan shortHeight
+
+        val ownHeight = height(TALL)
+
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+
+        height(TALL) shouldBe ownHeight
+    }
+
+    @Test
+    fun `the cards behind follow a front card that changes height while they are moving to it`() = runComposeUiTest {
+        val holler = Holler()
+
+        host(holler)
+        show(holler, "Short")
+        holler.show(PileMessage(TALL), key = "front")
+        advanceTimeByFrame()
+        advanceTimeBy(PILE_HALFWAY_MILLIS)
+
+        // The front message gets a third line while the card behind is still moving to its height.
+        holler.show(PileMessage(TALLER), key = "front")
+        advanceTimeBy(PILE_HALFWAY_MILLIS)
+
+        withClue("the card behind must not have jumped to the new height") {
+            height("Short") shouldBeLessThan height(TALLER)
+        }
+
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+
+        height("Short") shouldBe height(TALLER)
+    }
+
+    @Test
+    fun `closing two front cards one right after the other leaves the next one at its own height`() = runComposeUiTest {
+        val holler = Holler()
+
+        host(holler)
+        show(holler, TALL)
+
+        val tallHeight = height(TALL)
+
+        show(holler, "Second", "Third")
+        frontCloseButton().performClick()
+        advanceTimeBy(PILE_HALFWAY_MILLIS)
+        frontCloseButton().performClick()
+        advanceTimeBy(PILE_HALFWAY_MILLIS)
+
+        withClue("the tall card must be on its way to its own height") {
+            height(TALL) shouldBeLessThan tallHeight
+        }
+
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+
+        height(TALL) shouldBe tallHeight
+        bounds(TALL).width shouldBe (CARD_FULL_WIDTH plusOrMinus 1f)
+    }
+
+    @Test
+    fun `for a host at the top a shorter card behind a taller one still shows below it`() = runComposeUiTest {
+        val holler = Holler()
+
+        host(holler, alignment = Alignment.TopCenter)
+        show(holler, "Short", TALL)
+
+        withClue("the shorter card must be as tall as the front one, so that it shows past it") {
+            height("Short") shouldBe height(TALL)
+        }
+        withClue("the card behind must show below the front one") {
+            bounds("Short").bottom shouldBeGreaterThan bounds(TALL).bottom
+        }
+    }
+
+    @Test
+    fun `a pile that was emptied starts again without moving any height`() = runComposeUiTest {
+        val holler = Holler()
+
+        host(holler)
+        show(holler, TALL)
+
+        val tallHeight = height(TALL)
+
+        frontCloseButton().performClick()
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+
+        holler.messages.shouldBeEmpty()
+
+        holler.show(PileMessage("Short"))
+        advanceTimeByFrame()
+        advanceTimeByFrame()
+        advanceTimeByFrame()
+
+        val shortHeight = height("Short")
+
+        shortHeight shouldBeLessThan tallHeight
+
+        advanceTimeBy(PILE_SETTLE_MILLIS)
+
+        height("Short") shouldBe shortHeight
+    }
+
+    @Test
     fun `a message closed from code while it waits under the pile is taken out of the queue`() = runComposeUiTest {
         val holler = Holler()
 
@@ -298,6 +526,14 @@ class HollerPileUiTest : UiTest() {
         .width
 
     /**
+     * The height a card is laid out at, before the pile draws it smaller.
+     *
+     * @param name the name of the card's message.
+     * @return the height of the card, in pixels.
+     */
+    private fun ComposeUiTest.height(name: String): Int = runOnIdle { cards.getValue(name).size.height }
+
+    /**
      * Whether the card of a message is on screen right now.
      *
      * @param name the name of the card's message.
@@ -327,11 +563,13 @@ class HollerPileUiTest : UiTest() {
      * @param holler the object whose messages are drawn.
      * @param alignment where the pile is placed.
      * @param maxVisible how many cards the pile holds.
+     * @param withDetails whether every message has a long text, so it can be expanded.
      */
     private fun ComposeUiTest.host(
         holler: Holler,
         alignment: Alignment = Alignment.BottomCenter,
         maxVisible: Int = HollerDefaults.maxVisible(HollerStackingStyle.Pile),
+        withDetails: Boolean = false,
     ) {
         mainClock.autoAdvance = false
         setContent {
@@ -351,6 +589,7 @@ class HollerPileUiTest : UiTest() {
                     HollerMessage(
                         title = name,
                         modifier = Modifier.onGloballyPositioned { cards[name] = it },
+                        details = "$name details".takeIf { withDetails },
                         countdown = { Text("$name left:${it.inWholeSeconds}") },
                         pauseOnPressOrHover = false,
                     )

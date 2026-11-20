@@ -79,6 +79,8 @@ internal const val FOOTER_COLLAPSE_MILLIS: Int = 200
  * pointer hovers over it. Dragging the card pauses the timer whatever this value is.
  * @param place where the card stands among the messages: whether it is leaving, whether it gives
  * under a press, and whether it is behind another one in a pile.
+ * @param state what the card keeps while its message shows the same content: its timer and whether it
+ * is expanded. A card drawn again for the same content goes on from it.
  * @param colors the colors of the card.
  * @param style the shape, sizes and text styles of the card.
  * @param descriptions what a screen reader announces for the card's own buttons.
@@ -103,6 +105,7 @@ internal fun HollerCard(
     stoppableBy: HollerStopTrigger,
     pauseOnPressOrHover: Boolean,
     place: CardPlace,
+    state: CardState,
     colors: HollerColors,
     style: HollerStyle,
     descriptions: ControlDescriptions,
@@ -110,7 +113,7 @@ internal fun HollerCard(
     closeIcon: @Composable () -> Unit,
 ) {
     val currentOnDismiss by rememberUpdatedState(onDismiss)
-    val timer = remember(duration) { HollerTimer(duration.value) }
+    val timer = remember(state, duration) { state.timerFor(duration) }
 
     val expandable = details != null
     val middleActions = actions.takeIf { actionsPosition == HollerActionsPosition.Middle }
@@ -120,7 +123,7 @@ internal fun HollerCard(
 
     requireNoTimerToStop(startsExpanded, stoppableBy, duration)
 
-    val expansion = remember { CardExpansion(startsExpanded) }
+    val expansion = remember(state) { state.expansionFor(startsExpanded) }
 
     val showHint = actionsInBody && actionsVisibility == HollerActionsVisibility.ChevronHint && !expansion.hintSeen
 
@@ -155,6 +158,7 @@ internal fun HollerCard(
                     expandable = expandable,
                     expanded = expansion.isExpanded,
                     showHint = showHint,
+                    nudgeHint = showHint && !expansion.hintNudged,
                     showClose = closePosition == HollerClosePosition.Top,
                     colors = colors,
                     style = style,
@@ -164,6 +168,7 @@ internal fun HollerCard(
                     onToggleExpanded = {
                         if (expansion.toggle() && stoppableBy == HollerStopTrigger.Expand) timer.stop()
                     },
+                    onHintNudged = { expansion.hintNudged = true },
                     onClose = onClose,
                 )
                 CardBody(
@@ -258,35 +263,6 @@ private class ActionsScope(private val onDismiss: () -> Unit) : HollerActionsSco
 
     /** Closes the message, reporting [HollerDismissReason.Action]. */
     override fun dismiss() = onDismiss()
-}
-
-/**
- * Whether the card is expanded, and whether the user has expanded it yet.
- *
- * @param startExpanded whether the card starts with its long text revealed.
- */
-private class CardExpansion(startExpanded: Boolean) {
-
-    /** `true` while the long text is revealed. */
-    var isExpanded: Boolean by mutableStateOf(startExpanded)
-        private set
-
-    /** `true` once the user has expanded the card, after which the expand button no longer hints. */
-    var hintSeen: Boolean by mutableStateOf(false)
-        private set
-
-    /**
-     * Expands a collapsed card, or collapses an expanded one.
-     *
-     * @return whether the card is now expanded.
-     */
-    fun toggle(): Boolean {
-        isExpanded = !isExpanded
-
-        if (isExpanded) hintSeen = true
-
-        return isExpanded
-    }
 }
 
 /**

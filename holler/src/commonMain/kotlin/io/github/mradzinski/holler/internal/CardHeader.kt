@@ -19,7 +19,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -68,6 +70,7 @@ private const val HINT_NUDGE_COUNT: Int = 2
  * @param expandable whether the card has a long text to reveal.
  * @param expanded whether the long text is currently revealed.
  * @param showHint whether the expand button should hint that actions are inside.
+ * @param nudgeHint whether the expand button should also make its hinting movement, which it makes once.
  * @param showClose whether the close button sits in this row.
  * @param colors the colors of the card.
  * @param style the style of the card.
@@ -75,6 +78,7 @@ private const val HINT_NUDGE_COUNT: Int = 2
  * @param expandIcon draws the symbol of the expand button. It receives whether the message is expanded.
  * @param closeIcon draws the symbol of the close button.
  * @param onToggleExpanded called when the expand button is pressed.
+ * @param onHintNudged called once the expand button has made its hinting movement.
  * @param onClose called when the close button is pressed.
  */
 @Composable
@@ -86,6 +90,7 @@ internal fun CardHeader(
     expandable: Boolean,
     expanded: Boolean,
     showHint: Boolean,
+    nudgeHint: Boolean,
     showClose: Boolean,
     colors: HollerColors,
     style: HollerStyle,
@@ -93,6 +98,7 @@ internal fun CardHeader(
     expandIcon: @Composable (expanded: Boolean) -> Unit,
     closeIcon: @Composable () -> Unit,
     onToggleExpanded: () -> Unit,
+    onHintNudged: () -> Unit,
     onClose: () -> Unit,
 ) {
     Row(
@@ -132,6 +138,7 @@ internal fun CardHeader(
             ExpandButton(
                 expanded = expanded,
                 showHint = showHint,
+                nudgeHint = nudgeHint,
                 colors = colors,
                 label = if (expanded) {
                     descriptions.collapse
@@ -139,6 +146,7 @@ internal fun CardHeader(
                     descriptions.expand
                 },
                 icon = expandIcon,
+                onHintNudged = onHintNudged,
                 onClick = onToggleExpanded,
             )
         }
@@ -214,29 +222,36 @@ private fun HeaderActions(scope: HollerActionsScope, actions: @Composable Holler
  *
  * @param expanded whether the message is currently expanded.
  * @param showHint whether to show the "there is more inside" hint.
+ * @param nudgeHint whether to also make the hinting movement.
  * @param colors the colors of the card.
  * @param label what a screen reader announces for the button.
  * @param icon draws the symbol of the button. It receives whether the message is expanded.
+ * @param onHintNudged called once the hinting movement has been made.
  * @param onClick called when the button is pressed.
  */
 @Composable
 private fun ExpandButton(
     expanded: Boolean,
     showHint: Boolean,
+    nudgeHint: Boolean,
     colors: HollerColors,
     label: String,
     icon: @Composable (expanded: Boolean) -> Unit,
+    onHintNudged: () -> Unit,
     onClick: () -> Unit,
 ) {
     val nudge = remember { Animatable(0f) }
+    val currentOnHintNudged by rememberUpdatedState(onHintNudged)
 
-    if (showHint) {
+    if (nudgeHint) {
         LaunchedEffect(Unit) {
             delay(HINT_DELAY_MILLIS.milliseconds)
             repeat(HINT_NUDGE_COUNT) {
                 nudge.animateTo(1f, tween(HINT_NUDGE_MILLIS))
                 nudge.animateTo(0f, tween(HINT_NUDGE_MILLIS))
             }
+
+            currentOnHintNudged()
         }
     }
 

@@ -54,6 +54,13 @@ internal class HollerEntry(
     /** `true` once the message has been asked to close, so it is only closed once. */
     val isDismissed: Boolean get() = stage == Stage.Leaving
 
+    /**
+     * `true` once a card has been drawn for the message, which is when its enter animation starts. It is
+     * how a card that takes the message over later knows the enter is not its own to play. Only touched
+     * while composing, on the UI thread.
+     */
+    var enterStarted: Boolean = false
+
     /** Why the message closed, once it has. It is what a wait that starts afterwards returns. */
     @Volatile
     private var closedFor: HollerDismissReason? = null

@@ -19,6 +19,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -31,7 +32,7 @@ private const val PILE_SCALE_STEP: Float = 0.05f
 private val PilePeek: Dp = 10.dp
 
 /** How long a card takes to move forward or back in a pile, in milliseconds. */
-private const val PILE_MOVE_MILLIS: Int = 200
+internal const val PILE_MOVE_MILLIS: Int = 200
 
 /** The share of the press of the card in front of it that a covered card follows. */
 private const val PILE_PRESS_FOLLOW: Float = 0.5f
@@ -87,7 +88,8 @@ internal fun pileCardAlpha(depth: Float, size: Int): Float = (size - depth).coer
 /**
  * Lays messages out as a pile: the newest in front at full size, and the earlier ones behind it, each
  * a little smaller and showing past the one in front of it. The cards behind take the height of the
- * front card, so a taller one never shows around it.
+ * front card, so a taller one never shows around it. When another card becomes the front one, that
+ * height moves to the new one with the pile: see [PileHeight].
  *
  * A message that is leaving is drawn over the pile where it was and no longer counts as part of it, so
  * the card behind it comes forward while it leaves.
@@ -107,6 +109,7 @@ internal fun Pile(
     card: @Composable (entry: HollerEntry, place: PilePlace) -> Unit,
 ) {
     val press = remember { PilePress() }
+    val pileHeight = rememberPileHeight()
     val staying = entries.filterNot { it.isLeaving }
     val frontIndex = entries.indexOf(staying.lastOrNull())
 
@@ -131,16 +134,32 @@ internal fun Pile(
         },
     ) { measurables, constraints ->
         val loose = constraints.copy(minWidth = 0, minHeight = 0)
-        val front = measurables.getOrNull(frontIndex)?.measure(loose)
+        val frontEntry = entries.getOrNull(frontIndex)
+
+        // A front card that came forward from behind is held at the moving height until it gets to its own.
+        val held = pileHeight.forcedFrontHeight(frontEntry, entries, loose.maxWidth)
+        val front = measurables
+            .getOrNull(frontIndex)
+            ?.measure(loose.withHeight(held))
 
         // A front card that is not drawn yet has no height to give to the others.
         val frontHeight = front?.height?.takeIf { it > 0 }
 
+        val sharedHeight = if (frontEntry != null && frontHeight != null) {
+            pileHeight.sharedHeight(
+                front = frontEntry,
+                width = loose.maxWidth,
+                freeHeight = frontHeight.takeIf { held == null },
+            )
+        } else {
+            pileHeight.lastHeight
+        }
+
         val placeables = measurables.mapIndexed { index, measurable ->
             when {
                 index == frontIndex && front != null -> front
-                frontHeight == null || entries[index].isLeaving -> measurable.measure(loose)
-                else -> measurable.measure(loose.copy(minHeight = frontHeight, maxHeight = frontHeight))
+                entries[index].isLeaving -> measurable.measure(loose)
+                else -> measurable.measure(loose.withHeight(sharedHeight))
             }
         }
 
@@ -160,6 +179,18 @@ internal fun Pile(
             }
         }
     }
+}
+
+/**
+ * Makes these constraints ask for one exact height, or leaves them as they are.
+ *
+ * @param height the height to ask for, in pixels, or `null` to leave the height free.
+ * @return the constraints to measure a card with.
+ */
+private fun Constraints.withHeight(height: Int?): Constraints = if (height == null) {
+    this
+} else {
+    copy(minHeight = height, maxHeight = height)
 }
 
 /** `true` while the message is on its way out: its exit animation is running. Observable. */
@@ -264,6 +295,9 @@ private fun PileSlot(
                 }
             }
             .then(coveredModifier),
+        // The height the pile gives a card is passed on to it, so a card shorter than the front one
+        // grows to its height and still shows past it.
+        propagateMinConstraints = true,
     ) {
         card(PilePlace(covered = covered, depth = { animatedDepth.value }, press = press))
     }

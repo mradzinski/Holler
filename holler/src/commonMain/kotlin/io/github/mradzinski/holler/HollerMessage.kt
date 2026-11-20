@@ -136,6 +136,7 @@ public fun HollerHostScope.HollerMessage(
                 covered = frame.pile?.covered == true,
                 pilePress = frame.pile?.press,
             ),
+            state = frame.entry.content.cardState,
             colors = colors ?: frame.colors,
             style = messageStyle,
             descriptions = frame.descriptions,

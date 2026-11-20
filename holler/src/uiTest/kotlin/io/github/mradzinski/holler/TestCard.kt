@@ -2,8 +2,10 @@ package io.github.mradzinski.holler
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import io.github.mradzinski.holler.internal.CardPlace
+import io.github.mradzinski.holler.internal.CardState
 import io.github.mradzinski.holler.internal.ControlDescriptions
 import io.github.mradzinski.holler.internal.HollerCard
 import io.github.mradzinski.holler.internal.defaultDuration
@@ -37,6 +39,7 @@ import kotlin.time.Duration
  * @param pauseOnPressOrHover whether pressing or hovering pauses the timer.
  * @param leaving whether the card is on its way out.
  * @param animateOnPress whether the card gives under a press.
+ * @param state what the card keeps while it is not drawn. A test passes its own to draw a card again.
  * @param colors the colors of the card.
  * @param style the style of the card.
  * @param expandIcon draws the symbol of the expand button.
@@ -66,6 +69,7 @@ internal fun TestCard(
     pauseOnPressOrHover: Boolean = false,
     leaving: Boolean = false,
     animateOnPress: Boolean = true,
+    state: CardState = remember { CardState() },
     colors: HollerColors = HollerDefaults.colors(),
     style: HollerStyle = HollerDefaults.style(),
     expandIcon: @Composable (expanded: Boolean) -> Unit = { expanded -> HollerDefaults.ExpandIcon(expanded) },
@@ -88,6 +92,7 @@ internal fun TestCard(
         stoppableBy = stoppableBy,
         pauseOnPressOrHover = pauseOnPressOrHover,
         place = CardPlace(leaving = leaving, animateOnPress = animateOnPress),
+        state = state,
         colors = colors,
         style = style,
         descriptions = ControlDescriptions(
@@ -122,6 +127,7 @@ internal fun TestCard(
  * @param pauseOnPressOrHover whether pressing or hovering pauses the timer.
  * @param leaving whether the card is on its way out.
  * @param animateOnPress whether the card gives under a press.
+ * @param state what the card keeps while it is not drawn. A test passes its own to draw a card again.
  * @param colors the colors of the card.
  * @param style the style of the card.
  * @param expandIcon draws the symbol of the expand button.
@@ -151,6 +157,7 @@ internal fun TestCard(
     pauseOnPressOrHover: Boolean = false,
     leaving: Boolean = false,
     animateOnPress: Boolean = true,
+    state: CardState = remember { CardState() },
     colors: HollerColors = HollerDefaults.colors(),
     style: HollerStyle = HollerDefaults.style(),
     expandIcon: @Composable (expanded: Boolean) -> Unit = { expanded -> HollerDefaults.ExpandIcon(expanded) },
@@ -175,6 +182,7 @@ internal fun TestCard(
     pauseOnPressOrHover = pauseOnPressOrHover,
     leaving = leaving,
     animateOnPress = animateOnPress,
+    state = state,
     colors = colors,
     style = style,
     expandIcon = expandIcon,

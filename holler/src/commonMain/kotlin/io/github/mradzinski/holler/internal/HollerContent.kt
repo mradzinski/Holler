@@ -19,6 +19,12 @@ internal class HollerContent(val value: Any) {
     val waiters: MutableList<CancellableContinuation<HollerDismissReason>> = mutableListOf()
 
     /**
+     * What the card of this content keeps while it is not drawn: its timer and whether it is expanded.
+     * New content has a new one, which is how a replaced message starts over.
+     */
+    val cardState: CardState = CardState()
+
+    /**
      * Hands over the callers that are waiting and forgets them. The caller holds the lock, and resumes
      * them once it has released it.
      *

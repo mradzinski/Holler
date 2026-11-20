@@ -1,6 +1,7 @@
 package io.github.mradzinski.holler.internal
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.shrinkVertically
@@ -9,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
@@ -94,10 +97,22 @@ internal fun HostedFrame.AnimatedCard(
     // and the matching padding below make that layer large enough to hold the card's shadow.
     val bleed = style.shadowExtent
 
+    // The enter animation lives in the card that plays it. A card that takes the message over after it
+    // started cannot go on with it: it is a new card, for a message replaced by a value the app draws
+    // from another place in its code, or for one that comes back from under a pile. Playing the enter
+    // again from the start would show the message arriving twice, so that card shows at once instead.
+    val takesOver = remember { entry.enterStarted }
+
+    SideEffect { entry.enterStarted = true }
+
     AnimatedVisibility(
         visibleState = entry.visibility,
         modifier = Modifier.shadowBleed(bleed),
-        enter = animation.messageEnter(context),
+        enter = if (takesOver) {
+            EnterTransition.None
+        } else {
+            animation.messageEnter(context)
+        },
         exit = animation.messageExit(context) + gapExit,
     ) {
         // Replaced content is drawn as a new card in the same place: its timer, expansion and swipe
@@ -110,7 +125,11 @@ internal fun HostedFrame.AnimatedCard(
                     .padding(bottom = spacing),
                 Modifier
                     .animateEnterExit(
-                        enter = animation.messageContentEnter(context),
+                        enter = if (takesOver) {
+                            EnterTransition.None
+                        } else {
+                            animation.messageContentEnter(context)
+                        },
                         exit = animation.messageContentExit(context),
                     )
                     // A card behind another one in a pile shows its surface only.
