@@ -62,6 +62,7 @@ your app's Material theme.
 - [Accessibility](#accessibility)
 - [Project layout](#project-layout)
 - [Architecture](#architecture)
+- [Changelog](#changelog)
 - [License](#license)
 
 ## Before you begin
@@ -1028,6 +1029,10 @@ PlantUML, and the source sits next to the image in [`docs/`](docs/).
 | 3 | [States](docs/holler-3-states.png) | The two state machines inside a message: its place in the queue and its countdown. | [`.puml`](docs/holler-3-states.puml) |
 | 4 | [Public API](docs/holler-4-public-api.png) | Everything an app can call and pass, grouped by purpose. | [`.puml`](docs/holler-4-public-api.puml) |
 | 5 | [Internals](docs/holler-5-internals.png) | The classes behind the public API and how they hold each other. | [`.puml`](docs/holler-5-internals.puml) |
+
+## Changelog
+
+What changed in each version is in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
